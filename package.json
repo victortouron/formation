@@ -1,0 +1,18 @@
+{
+  "name": "formation",
+  "version": "1.0.0",
+  "description": "## Installation",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "dependencies": {
+    "markdown-to-html": "0.0.13"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
