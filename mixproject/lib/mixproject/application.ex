@@ -10,8 +10,8 @@ defmodule Mixproject.Application do
     children = [
       # Starts a worker by calling: Mixproject.Worker.start_link(arg)
       # {Mixproject.Worker, arg}
+      Server.Supervisor
     ]
-
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Mixproject.Supervisor]
