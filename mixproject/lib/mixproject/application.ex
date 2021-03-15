@@ -12,7 +12,7 @@ defmodule Mixproject.Application do
       # Starts a worker by calling: Mixproject.Worker.start_link(arg)
       # {Mixproject.Worker, arg}
       Server.Supervisor,
-      {Plug.Cowboy, scheme: :http, plug: TheFirstPlug, options: [port: 4001]}
+      {Plug.Cowboy, scheme: :http, plug: Server.Router, options: [port: 4001]}
 
     ]
     # See https://hexdocs.pm/elixir/Supervisor.html

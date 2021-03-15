@@ -1,4 +1,4 @@
-defmodule TheFirstPlug do
+defmodule Server.Router do
   use Plug.Router
 
   plug :match
