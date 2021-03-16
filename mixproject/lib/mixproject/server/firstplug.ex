@@ -7,18 +7,12 @@ defmodule TheFirstPlug do
   end
 
   def call(conn, _opts) do
-    cond do
-      conn.request_path == "/" -> send_resp(conn, 200, "Welcome to the new world of Plugs!")
-      conn.request_path == "/me" -> send_resp(conn, 200, "I am The First, The One, Le Geant Plug Vert, Le Grand Plug, Le Plug Cosmique.")
-      true -> send_resp(conn, 404, "Go away, you are not welcome here.")
+    case conn.request_path do
+      "/" -> send_resp(conn, 200, "Welcome to the new world of Plugs!")
+      "/me" -> send_resp(conn, 200, "I am The First, The One, Le Geant Plug Vert, Le Grand Plug, Le Plug Cosmique.")
+      _ -> send_resp(conn, 404, "Go away, you are not welcome here.")
     end
-    # case conn.request_path do
-    #   "/" -> ...
-    #   "/me" -> ...
-    #   _ ->
-    # end
-    end
-
+  end
     # def call(%{:request_path => "/"} = conn, _opts) do
     #   send_resp(conn, 200, "Welcome to the new world of Plugs!")
     # end
