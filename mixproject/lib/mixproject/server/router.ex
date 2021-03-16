@@ -4,16 +4,17 @@ defmodule Server.Router do
   plug :match
   plug :dispatch
 
+  get "/create" do
+    %{"table" => table, "key"=> key, "value" => value} = Plug.Conn.Query.decode(conn.query_string)
+    IO.inspect Server.Database.create(String.to_atom(table), {String.to_atom(key), value})
+    send_resp(conn, 200, "ok")
+  end
 
   get "/read" do
-    query_string = conn.query_string
-    query_params = Plug.Conn.Query.decode(query_string)
-    IO.inspect query_params
-    db = Map.fetch(query_params, "id")
-    key = Map.fetch(query_params, "value")
-    IO.inspect db
-    IO.inspect key
-    send_resp(conn, 200, "Read")
+    %{"table" => table, "key"=> key} = Plug.Conn.Query.decode(conn.query_string)
+    reply = Server.Database.read(String.to_atom(table), String.to_atom(key))
+    {rep, res} =  Keyword.fetch(reply, String.to_atom(key))
+    send_resp(conn, 200, res)
   end
 
   get "/", do: send_resp(conn, 200, "Welcome")

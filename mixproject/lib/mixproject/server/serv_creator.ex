@@ -45,16 +45,25 @@ defmodule Server.TheCreator do
         options
       end
 
-      def call(conn, _opts) do
-        Enum.each @routes, fn name ->
+      def is_match(conn) do
+        Enum.find @routes, fn name ->
           if (name == String.to_existing_atom(conn.request_path)) do
-            {code, message} = apply(__MODULE__, name, [])
-            send_resp(conn, code, message)
+            true
           end
         end
+      end
+
+      def call(conn, _opts) do
+        Enum.find @routes, fn name ->
+          name == String.to_existing_atom(conn.request_path)
+        end
+        send_resp(conn, 404, "error")
+
+        # {code, message} = apply(__MODULE__, match, [])
+        # send_resp(conn, code, message)
           # Enum.each @routes, fn name ->
           #   IO.puts "test"
-          #   if (name == String.to_existing_atom(conn.request_path)) do
+            # if (name == String.to_existing_atom(conn.request_path)) do
           #     {code, message} = apply(__MODULE__, name, [])
           #     send_resp(conn, code, message)
           #   end
