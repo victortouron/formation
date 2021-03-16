@@ -6,6 +6,9 @@ defmodule Server.Database do
   def delete(database, key), do: GenServer.cast(Server.Database, {:delete, database, key})
   def search(database, criteria), do: GenServer.call(Server.Database, {:search, database, criteria})
 
+  def handle_call({database, key}, _pid, intern_state) do
+     {:reply, :ets.lookup(database, key), intern_state}
+   end
   def handle_cast({:create, database, {key, value}}, intern_state) do
     :ets.insert_new(database, {key, value})
     {:noreply, intern_state}
@@ -43,6 +46,9 @@ defmodule Server.Database do
   end
 
   def init(_) do
+    db = :user
+    :ets.new(db, [:named_table, :public])
+    Server.Database.create(db, {:name, "Vic"})
     {:ok, :ok}
   end
 end
