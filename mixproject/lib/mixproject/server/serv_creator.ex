@@ -28,11 +28,11 @@ defmodule Server.TheCreator do
   end
 
   defmacro my_error([code, content]) do
-    # IO.inspect elem(code,1)
-    # IO.inspect elem(content,1)
-    # Module.put_attribute(Server.TheCreator, :error_code, elem(code, 1))
-    # Module.delete_attribute(Server.TheCreator, :error_code)
+    error_code = elem(code,1)
+    error_content = elem(content,1)
     quote do
+      @error_code unquote(error_code)
+      @error_content unquote(error_content)
     end
   end
 
@@ -44,31 +44,17 @@ defmodule Server.TheCreator do
         options
       end
 
-
       def call(conn, _opts) do
-        IO.inspect Enum.find @routes, fn name ->
-          name == String.to_existing_atom(conn.request_path)
+        route =  Enum.find(@routes, fn name ->
+          name == String.to_atom(conn.request_path)
+        end)
+        case route do
+          nil -> send_resp(conn, @error_code, @error_content)
+          _ ->
+          {code, message} = apply(__MODULE__, route, [])
+          send_resp(conn, code, message)
         end
-        send_resp(conn, 200, "ok")
-        # IO.inspect resp
-        # case resp do
-        #     -> send_resp(conn, 200, "ok")
-        #   _ -> send_resp(conn, 404, "error")
-        # end
-
-        # {code, message} = apply(__MODULE__, match, [])
-        # send_resp(conn, code, message)
-          # Enum.each @routes, fn name ->
-          #   IO.puts "test"
-            # if (name == String.to_existing_atom(conn.request_path)) do
-          #     {code, message} = apply(__MODULE__, name, [])
-          #     send_resp(conn, code, message)
-          #   end
-          # end
-          # send_resp(conn, 404, "ERROR")
-          # IO.puts "END"
-        end
-
       end
     end
   end
+end
