@@ -26,11 +26,17 @@ defmodule Server.Database do
       {id, key} = x
       match = Enum.reduce(list, [], fn x, acc ->
         {_command, value} = x
+        if is_map(value) do
         {:ok, resp} = Map.fetch(value, id)
         if resp == key do
           _acc = x
         else
           acc
+        end
+        else
+          if value == key do
+            _acc = x
+          end
         end
       end)
       acc ++ [match]
