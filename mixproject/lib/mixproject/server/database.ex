@@ -33,13 +33,13 @@ defmodule Server.Database do
         else
           acc
         end
-        else
-          if value == key do
-            _acc = x
-          end
         end
       end)
-      acc ++ [match]
+      if match == [] do
+        acc
+      else
+        acc ++ [match]
+      end
     end)
     {:reply, response, intern_state}
   end
@@ -50,9 +50,11 @@ defmodule Server.Database do
   end
 
   def init(_) do
-    db = :user
+    db = :json
     :ets.new(db, [:named_table, :public])
-    Server.Database.create(db, {:name, "Vic"})
+    IO.puts "Loading JSON into DB"
+    JsonLoader.load_to_database(db, "/home/coachbombay/formation/mixproject/orders_dump/orders_chunk0.json")
+    IO.puts "JSON Loaded Succes"
     {:ok, :ok}
   end
 end
