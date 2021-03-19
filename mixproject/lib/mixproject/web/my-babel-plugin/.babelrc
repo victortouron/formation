@@ -1,0 +1,3 @@
+{
+  "plugins": ["./my-babel-plugin", "./jsx-syntax-parser"]
+}

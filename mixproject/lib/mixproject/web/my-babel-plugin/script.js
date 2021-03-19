@@ -1,2 +1,1 @@
-<Declaration var="test" value="42"/>
-<Declaration var="test" value={42}/>
+ReactDOM.render(<div><p>Hello World</p></div>, document.getElementById("root"))

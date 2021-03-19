@@ -1,5 +1,5 @@
 module.exports = {
-  entry: './script.js',
+  entry: './my-babel-plugin/script.js',
   output: { filename: 'bundle.js' },
   plugins: [],
   module: {
@@ -15,7 +15,9 @@ module.exports = {
             {
               dir: 'webflow'
             }
-          ]],
+          ]
+        ],
+          plugins: ['my-babel-plugin']
         }
       }
     ]
