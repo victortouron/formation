@@ -17,7 +17,7 @@ module.exports = {
             }
           ]
         ],
-          plugins: ['my-babel-plugin']
+        plugins: ['./my-babel-plugin']
         }
       }
     ]
