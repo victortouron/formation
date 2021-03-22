@@ -34,8 +34,11 @@ module.exports = function (babel) {
         ident = openingElement.attributes[0].name.name
         var_name = openingElement.attributes[0].value.value
         value = openingElement.attributes[1].value.expression.value
-        // path.replaceWith(t.variableDeclaration("var",[ t.variableDeclarator(["toto"], 42) ]));
-        // console.log(t.variableDeclaration("var", [t.variableDeclarator(t.identifier("toto"), "tata")]));
+        final = var_name + "=" + value
+
+        path.replaceWith(t.variableDeclaration(ident, [
+         t.variableDeclarator(
+          t.identifier(final),)]))
 
       },
     },
