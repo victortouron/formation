@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 83);
+/******/ 	return __webpack_require__(__webpack_require__.s = 84);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10605,18 +10605,159 @@ module.exports = __webpack_require__(19);
 
 /***/ }),
 /* 83 */
+/***/ (function(module, exports) {
+
+// Load modules
+
+
+// Declare internals
+
+var internals = {};
+
+
+exports.arrayToObject = function (source) {
+
+    var obj = {};
+    for (var i = 0, il = source.length; i < il; ++i) {
+        if (typeof source[i] !== 'undefined') {
+
+            obj[i] = source[i];
+        }
+    }
+
+    return obj;
+};
+
+
+exports.merge = function (target, source) {
+
+    if (!source) {
+        return target;
+    }
+
+    if (typeof source !== 'object') {
+        if (Array.isArray(target)) {
+            target.push(source);
+        }
+        else {
+            target[source] = true;
+        }
+
+        return target;
+    }
+
+    if (typeof target !== 'object') {
+        target = [target].concat(source);
+        return target;
+    }
+
+    if (Array.isArray(target) &&
+        !Array.isArray(source)) {
+
+        target = exports.arrayToObject(target);
+    }
+
+    var keys = Object.keys(source);
+    for (var k = 0, kl = keys.length; k < kl; ++k) {
+        var key = keys[k];
+        var value = source[key];
+
+        if (!target[key]) {
+            target[key] = value;
+        }
+        else {
+            target[key] = exports.merge(target[key], value);
+        }
+    }
+
+    return target;
+};
+
+
+exports.decode = function (str) {
+
+    try {
+        return decodeURIComponent(str.replace(/\+/g, ' '));
+    } catch (e) {
+        return str;
+    }
+};
+
+
+exports.compact = function (obj, refs) {
+
+    if (typeof obj !== 'object' ||
+        obj === null) {
+
+        return obj;
+    }
+
+    refs = refs || [];
+    var lookup = refs.indexOf(obj);
+    if (lookup !== -1) {
+        return refs[lookup];
+    }
+
+    refs.push(obj);
+
+    if (Array.isArray(obj)) {
+        var compacted = [];
+
+        for (var i = 0, il = obj.length; i < il; ++i) {
+            if (typeof obj[i] !== 'undefined') {
+                compacted.push(obj[i]);
+            }
+        }
+
+        return compacted;
+    }
+
+    var keys = Object.keys(obj);
+    for (i = 0, il = keys.length; i < il; ++i) {
+        var key = keys[i];
+        obj[key] = exports.compact(obj[key], refs);
+    }
+
+    return obj;
+};
+
+
+exports.isRegExp = function (obj) {
+    return Object.prototype.toString.call(obj) === '[object RegExp]';
+};
+
+
+exports.isBuffer = function (obj) {
+
+    if (obj === null ||
+        typeof obj === 'undefined') {
+
+        return false;
+    }
+
+    return !!(obj.constructor &&
+        obj.constructor.isBuffer &&
+        obj.constructor.isBuffer(obj));
+};
+
+
+/***/ }),
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-__webpack_require__(84);
+// require('!!file-loader?name=[name].[ext]!./tuto.webflow/orders.html')
 __webpack_require__(85);
 __webpack_require__(86);
 
 var ReactDOM = __webpack_require__(87);
 var React = __webpack_require__(82);
 var createReactClass = __webpack_require__(190);
+var Qs = __webpack_require__(191);
+var Cookie = __webpack_require__(195);
+var browserState = {};
 
 var orders = [{ remoteid: "000000189", custom: { customer: { full_name: "TOTO & CIE" }, billing_address: "Some where in the world" }, items: 2 }, { remoteid: "000000190", custom: { customer: { full_name: "Looney Toons" }, billing_address: "The Warner Bros Company" }, items: 3 }, { remoteid: "000000191", custom: { customer: { full_name: "Asterix & Obelix" }, billing_address: "Armorique" }, items: 29 }, { remoteid: "000000192", custom: { customer: { full_name: "Lucky Luke" }, billing_address: "A Cowboy doesn't have an address. Sorry" }, items: 0 }];
 
@@ -10629,161 +10770,451 @@ var Page = createReactClass({
     return React.createElement(
       'div',
       {
-        className: 'table',
-        id: 'table'
+        className: 'orders',
+        id: 'orders'
       },
       React.createElement(
         'div',
         {
-          className: 'table-headder'
+          className: 'headder'
         },
         React.createElement(
           'div',
           {
-            className: 'col-1'
+            className: 'title'
           },
           React.createElement(
-            'div',
-            null,
-            'Command Number'
+            'h1',
+            {
+              className: 'heading'
+            },
+            'Orders',
+            React.createElement(
+              'span',
+              {
+                className: 'logo'
+              },
+              '\uF0D1'
+            )
           )
         ),
         React.createElement(
           'div',
           {
-            className: 'col-2'
+            className: 'form'
           },
           React.createElement(
             'div',
-            null,
-            'Customer'
-          )
-        ),
-        React.createElement(
-          'div',
-          {
-            className: 'col-3'
-          },
+            {
+              className: 'search'
+            },
+            React.createElement(
+              'div',
+              {
+                className: 'form-search w-form'
+              },
+              React.createElement(
+                'form',
+                {
+                  id: 'email-form',
+                  name: 'email-form',
+                  'data-name': 'Email Form',
+                  className: 'form-4'
+                },
+                React.createElement(
+                  'label',
+                  {
+                    htmlFor: 'name',
+                    className: 'field-label-4'
+                  },
+                  'Search ',
+                  React.createElement(
+                    'span',
+                    {
+                      className: 'text-span-5'
+                    },
+                    '\uF002'
+                  )
+                ),
+                React.createElement('input', {
+                  type: 'text',
+                  className: 'text-field-3 w-input',
+                  maxLength: 256,
+                  name: 'name',
+                  'data-name': 'Name',
+                  placeholder: '',
+                  id: 'name'
+                }),
+                React.createElement('input', {
+                  type: 'submit',
+                  defaultValue: 'Submit',
+                  'data-wait': 'Please wait...',
+                  className: 'submit-button-3 w-button'
+                })
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'w-form-done'
+                },
+                React.createElement(
+                  'div',
+                  null,
+                  'Thank you! Your submission has been received!'
+                )
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'w-form-fail'
+                },
+                React.createElement(
+                  'div',
+                  null,
+                  'Oops! Something went wrong while submitting the form.'
+                )
+              )
+            )
+          ),
           React.createElement(
             'div',
-            null,
-            'Adress'
-          )
-        ),
-        React.createElement(
-          'div',
-          {
-            className: 'col-4'
-          },
-          React.createElement(
-            'div',
-            null,
-            'Quantity'
-          )
-        ),
-        React.createElement(
-          'div',
-          {
-            className: 'col-5'
-          },
-          React.createElement(
-            'div',
-            null,
-            'Details'
-          )
-        ),
-        React.createElement(
-          'div',
-          {
-            className: 'col-6'
-          },
-          React.createElement(
-            'div',
-            null,
-            'Pay'
+            {
+              className: 'login'
+            },
+            React.createElement(
+              'div',
+              {
+                className: 'form-login w-form'
+              },
+              React.createElement(
+                'form',
+                {
+                  id: 'email-form',
+                  name: 'email-form',
+                  'data-name': 'Email Form',
+                  className: 'form-5'
+                },
+                React.createElement(
+                  'label',
+                  {
+                    htmlFor: 'name-2',
+                    className: 'field-label-5'
+                  },
+                  'John Doe'
+                ),
+                React.createElement('input', {
+                  type: 'submit',
+                  defaultValue: 'Login',
+                  'data-wait': 'Please wait...',
+                  className: 'w-button'
+                })
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'w-form-done'
+                },
+                React.createElement(
+                  'div',
+                  null,
+                  'Thank you! Your submission has been received!'
+                )
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'w-form-fail'
+                },
+                React.createElement(
+                  'div',
+                  null,
+                  'Oops! Something went wrong while submitting the form.'
+                )
+              )
+            )
           )
         )
       ),
       React.createElement(
         'div',
         {
-          className: 'table-body',
-          id: 'table-body'
+          className: 'table',
+          id: 'table'
         },
-        orders.map(function (order) {
-          return React.createElement(
+        React.createElement(
+          'div',
+          {
+            className: 'table-headder'
+          },
+          React.createElement(
             'div',
             {
-              className: 'table-line'
+              className: 'col-1'
             },
             React.createElement(
               'div',
-              {
-                className: 'col-1'
-              },
-              order.remoteid
-            ),
+              null,
+              'Command Number'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'col-2'
+            },
             React.createElement(
               'div',
-              {
-                className: 'col-2'
-              },
-              order.custom.customer.full_name
-            ),
+              null,
+              'Customer'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'col-3'
+            },
             React.createElement(
               'div',
-              {
-                className: 'col-3'
-              },
-              order.custom.billing_address
-            ),
+              null,
+              'Adress'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'col-4'
+            },
             React.createElement(
               'div',
-              {
-                className: 'col-4'
-              },
-              order.items
-            ),
+              null,
+              'Quantity'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'col-5'
+            },
             React.createElement(
               'div',
-              {
-                className: 'col-5'
-              },
+              null,
               'Details'
-            ),
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'col-6'
+            },
             React.createElement(
               'div',
-              {
-                className: 'col-6'
-              },
+              null,
               'Pay'
             )
-          );
-        })
+          )
+        ),
+        React.createElement(
+          'div',
+          {
+            className: 'table-body',
+            id: 'table-body'
+          },
+          orders.map(function (order) {
+            return React.createElement(
+              'div',
+              {
+                className: 'table-line'
+              },
+              React.createElement(
+                'div',
+                {
+                  className: 'col-1'
+                },
+                order.remoteid
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'col-2'
+                },
+                order.custom.customer.full_name
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'col-3'
+                },
+                order.custom.billing_address
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'col-4'
+                },
+                order.items
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'col-5'
+                },
+                'Details'
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'col-6'
+                },
+                'Pay'
+              )
+            );
+          })
+        )
+      ),
+      React.createElement(
+        'div',
+        {
+          className: 'footer'
+        },
+        React.createElement(
+          'div',
+          {
+            className: 'pagination'
+          },
+          React.createElement(
+            'div',
+            {
+              className: 'firstpage'
+            },
+            '\uF04A'
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'previouspage'
+            },
+            React.createElement(
+              'span',
+              {
+                className: 'text-span-6'
+              },
+              '\uF060'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'currentpage'
+            },
+            '1'
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'nextpage'
+            },
+            '\uF061'
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'lastpage'
+            },
+            '\uF04E'
+          )
+        )
       )
     );
   }
 });
 
-ReactDOM.render(React.createElement(Page, null), document.getElementById('table'));
+ReactDOM.render(React.createElement(Page, null), document.getElementById('root'));
 
-/***/ }),
-/* 84 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "orders.html";
+// var Layout = createReactClass({
+// render(){
+//   return <JSXZ in="orders" sel=".layout">
+//       <Z sel=".layout-container">
+//         <this.props.Child {...this.props}/>
+//       </Z>
+//     </JSXZ>
+//   }
+// })
+// var routes = {
+//   "orders": {
+//     path: (params) => {
+//       return "/";
+//     },
+//     match: (path, qs) => {
+//       return (path == "/") && {handlerPath: [Layout, Header, Orders]}
+//     }
+//   },
+//   "order": {
+//     path: (params) => {
+//       return "/order/" + params;
+//     },
+//     match: (path, qs) => {
+//       var r = new RegExp("/order/([^/]*)$").exec(path)
+//       return r && {handlerPath: [Layout, Header, Order],  order_id: r[1]}
+//     }
+//   }
+// }
+//
+// var Child = createReactClass({
+//   render(){
+//     var [ChildHandler,...rest] = this.props.handlerPath
+//     return <ChildHandler {...this.props} handlerPath={rest} />
+//   }
+// })
+//
+// function onPathChange() {
+//   var path = location.pathname
+//   var qs = Qs.parse(location.search.slice(1))
+//   var cookies = Cookie.parse(document.cookie)
+//   console.log(path)
+//   console.log(qs)
+//   console.log(cookies)
+//
+//   browserState = {
+//     ...browserState,
+//     path: path,
+//     qs: qs,
+//     cookie: cookies
+//   }
+//
+//   var route, routeProps
+//   //We try to match the requested path to one our our routes
+//   for(var key in routes) {
+//     routeProps = routes[key].match(path, qs)
+//     if(routeProps){
+//         route = key
+//           break;
+//     }
+//   }
+//   browserState = {
+//     ...browserState,
+//     ...routeProps,
+//     route: route
+//   }
+//   //If we don't have a match, we render an Error component
+//   if(!route)
+//     return ReactDOM.render(<ErrorPage message={"Not Found"} code={404}/>, document.getElementById('root'))
+//   ReactDOM.render(<Child {...browserState}/>, document.getElementById('root'))
+// }
+//
+// window.addEventListener("popstate", ()=>{ onPathChange() })
+// onPathChange()
 
 /***/ }),
 /* 85 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "order.html";
-
-/***/ }),
-/* 86 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 86 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "index.html";
 
 /***/ }),
 /* 87 */
@@ -22722,6 +23153,442 @@ module.exports = factory(
   React.isValidElement,
   ReactNoopUpdateQueue
 );
+
+
+/***/ }),
+/* 191 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(192);
+
+
+/***/ }),
+/* 192 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Load modules
+
+var Stringify = __webpack_require__(193);
+var Parse = __webpack_require__(194);
+
+
+// Declare internals
+
+var internals = {};
+
+
+module.exports = {
+    stringify: Stringify,
+    parse: Parse
+};
+
+
+/***/ }),
+/* 193 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Load modules
+
+var Utils = __webpack_require__(83);
+
+
+// Declare internals
+
+var internals = {
+    delimiter: '&',
+    indices: true
+};
+
+
+internals.stringify = function (obj, prefix, options) {
+
+    if (Utils.isBuffer(obj)) {
+        obj = obj.toString();
+    }
+    else if (obj instanceof Date) {
+        obj = obj.toISOString();
+    }
+    else if (obj === null) {
+        obj = '';
+    }
+
+    if (typeof obj === 'string' ||
+        typeof obj === 'number' ||
+        typeof obj === 'boolean') {
+
+        return [encodeURIComponent(prefix) + '=' + encodeURIComponent(obj)];
+    }
+
+    var values = [];
+
+    if (typeof obj === 'undefined') {
+        return values;
+    }
+
+    var objKeys = Object.keys(obj);
+    for (var i = 0, il = objKeys.length; i < il; ++i) {
+        var key = objKeys[i];
+        if (!options.indices &&
+            Array.isArray(obj)) {
+
+            values = values.concat(internals.stringify(obj[key], prefix, options));
+        }
+        else {
+            values = values.concat(internals.stringify(obj[key], prefix + '[' + key + ']', options));
+        }
+    }
+
+    return values;
+};
+
+
+module.exports = function (obj, options) {
+
+    options = options || {};
+    var delimiter = typeof options.delimiter === 'undefined' ? internals.delimiter : options.delimiter;
+    options.indices = typeof options.indices === 'boolean' ? options.indices : internals.indices;
+
+    var keys = [];
+
+    if (typeof obj !== 'object' ||
+        obj === null) {
+
+        return '';
+    }
+
+    var objKeys = Object.keys(obj);
+    for (var i = 0, il = objKeys.length; i < il; ++i) {
+        var key = objKeys[i];
+        keys = keys.concat(internals.stringify(obj[key], key, options));
+    }
+
+    return keys.join(delimiter);
+};
+
+
+/***/ }),
+/* 194 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Load modules
+
+var Utils = __webpack_require__(83);
+
+
+// Declare internals
+
+var internals = {
+    delimiter: '&',
+    depth: 5,
+    arrayLimit: 20,
+    parameterLimit: 1000
+};
+
+
+internals.parseValues = function (str, options) {
+
+    var obj = {};
+    var parts = str.split(options.delimiter, options.parameterLimit === Infinity ? undefined : options.parameterLimit);
+
+    for (var i = 0, il = parts.length; i < il; ++i) {
+        var part = parts[i];
+        var pos = part.indexOf(']=') === -1 ? part.indexOf('=') : part.indexOf(']=') + 1;
+
+        if (pos === -1) {
+            obj[Utils.decode(part)] = '';
+        }
+        else {
+            var key = Utils.decode(part.slice(0, pos));
+            var val = Utils.decode(part.slice(pos + 1));
+
+            if (!obj.hasOwnProperty(key)) {
+                obj[key] = val;
+            }
+            else {
+                obj[key] = [].concat(obj[key]).concat(val);
+            }
+        }
+    }
+
+    return obj;
+};
+
+
+internals.parseObject = function (chain, val, options) {
+
+    if (!chain.length) {
+        return val;
+    }
+
+    var root = chain.shift();
+
+    var obj = {};
+    if (root === '[]') {
+        obj = [];
+        obj = obj.concat(internals.parseObject(chain, val, options));
+    }
+    else {
+        var cleanRoot = root[0] === '[' && root[root.length - 1] === ']' ? root.slice(1, root.length - 1) : root;
+        var index = parseInt(cleanRoot, 10);
+        var indexString = '' + index;
+        if (!isNaN(index) &&
+            root !== cleanRoot &&
+            indexString === cleanRoot &&
+            index >= 0 &&
+            index <= options.arrayLimit) {
+
+            obj = [];
+            obj[index] = internals.parseObject(chain, val, options);
+        }
+        else {
+            obj[cleanRoot] = internals.parseObject(chain, val, options);
+        }
+    }
+
+    return obj;
+};
+
+
+internals.parseKeys = function (key, val, options) {
+
+    if (!key) {
+        return;
+    }
+
+    // The regex chunks
+
+    var parent = /^([^\[\]]*)/;
+    var child = /(\[[^\[\]]*\])/g;
+
+    // Get the parent
+
+    var segment = parent.exec(key);
+
+    // Don't allow them to overwrite object prototype properties
+
+    if (Object.prototype.hasOwnProperty(segment[1])) {
+        return;
+    }
+
+    // Stash the parent if it exists
+
+    var keys = [];
+    if (segment[1]) {
+        keys.push(segment[1]);
+    }
+
+    // Loop through children appending to the array until we hit depth
+
+    var i = 0;
+    while ((segment = child.exec(key)) !== null && i < options.depth) {
+
+        ++i;
+        if (!Object.prototype.hasOwnProperty(segment[1].replace(/\[|\]/g, ''))) {
+            keys.push(segment[1]);
+        }
+    }
+
+    // If there's a remainder, just add whatever is left
+
+    if (segment) {
+        keys.push('[' + key.slice(segment.index) + ']');
+    }
+
+    return internals.parseObject(keys, val, options);
+};
+
+
+module.exports = function (str, options) {
+
+    if (str === '' ||
+        str === null ||
+        typeof str === 'undefined') {
+
+        return {};
+    }
+
+    options = options || {};
+    options.delimiter = typeof options.delimiter === 'string' || Utils.isRegExp(options.delimiter) ? options.delimiter : internals.delimiter;
+    options.depth = typeof options.depth === 'number' ? options.depth : internals.depth;
+    options.arrayLimit = typeof options.arrayLimit === 'number' ? options.arrayLimit : internals.arrayLimit;
+    options.parameterLimit = typeof options.parameterLimit === 'number' ? options.parameterLimit : internals.parameterLimit;
+
+    var tempObj = typeof str === 'string' ? internals.parseValues(str, options) : str;
+    var obj = {};
+
+    // Iterate over the keys and setup the new object
+
+    var keys = Object.keys(tempObj);
+    for (var i = 0, il = keys.length; i < il; ++i) {
+        var key = keys[i];
+        var newObj = internals.parseKeys(key, tempObj[key], options);
+        obj = Utils.merge(obj, newObj);
+    }
+
+    return Utils.compact(obj);
+};
+
+
+/***/ }),
+/* 195 */
+/***/ (function(module, exports) {
+
+/*!
+ * cookie
+ * Copyright(c) 2012-2014 Roman Shtylman
+ * Copyright(c) 2015 Douglas Christopher Wilson
+ * MIT Licensed
+ */
+
+/**
+ * Module exports.
+ * @public
+ */
+
+exports.parse = parse;
+exports.serialize = serialize;
+
+/**
+ * Module variables.
+ * @private
+ */
+
+var decode = decodeURIComponent;
+var encode = encodeURIComponent;
+
+/**
+ * RegExp to match field-content in RFC 7230 sec 3.2
+ *
+ * field-content = field-vchar [ 1*( SP / HTAB ) field-vchar ]
+ * field-vchar   = VCHAR / obs-text
+ * obs-text      = %x80-FF
+ */
+
+var fieldContentRegExp = /^[\u0009\u0020-\u007e\u0080-\u00ff]+$/;
+
+/**
+ * Parse a cookie header.
+ *
+ * Parse the given cookie header string into an object
+ * The object has the various cookies as keys(names) => values
+ *
+ * @param {string} str
+ * @param {object} [options]
+ * @return {object}
+ * @public
+ */
+
+function parse(str, options) {
+  if (typeof str !== 'string') {
+    throw new TypeError('argument str must be a string');
+  }
+
+  var obj = {}
+  var opt = options || {};
+  var pairs = str.split(/; */);
+  var dec = opt.decode || decode;
+
+  pairs.forEach(function(pair) {
+    var eq_idx = pair.indexOf('=')
+
+    // skip things that don't look like key=value
+    if (eq_idx < 0) {
+      return;
+    }
+
+    var key = pair.substr(0, eq_idx).trim()
+    var val = pair.substr(++eq_idx, pair.length).trim();
+
+    // quoted values
+    if ('"' == val[0]) {
+      val = val.slice(1, -1);
+    }
+
+    // only assign once
+    if (undefined == obj[key]) {
+      obj[key] = tryDecode(val, dec);
+    }
+  });
+
+  return obj;
+}
+
+/**
+ * Serialize data into a cookie header.
+ *
+ * Serialize the a name value pair into a cookie string suitable for
+ * http headers. An optional options object specified cookie parameters.
+ *
+ * serialize('foo', 'bar', { httpOnly: true })
+ *   => "foo=bar; httpOnly"
+ *
+ * @param {string} name
+ * @param {string} val
+ * @param {object} [options]
+ * @return {string}
+ * @public
+ */
+
+function serialize(name, val, options) {
+  var opt = options || {};
+  var enc = opt.encode || encode;
+
+  if (!fieldContentRegExp.test(name)) {
+    throw new TypeError('argument name is invalid');
+  }
+
+  var value = enc(val);
+
+  if (value && !fieldContentRegExp.test(value)) {
+    throw new TypeError('argument val is invalid');
+  }
+
+  var pairs = [name + '=' + value];
+
+  if (null != opt.maxAge) {
+    var maxAge = opt.maxAge - 0;
+    if (isNaN(maxAge)) throw new Error('maxAge should be a Number');
+    pairs.push('Max-Age=' + maxAge);
+  }
+
+  if (opt.domain) {
+    if (!fieldContentRegExp.test(opt.domain)) {
+      throw new TypeError('option domain is invalid');
+    }
+
+    pairs.push('Domain=' + opt.domain);
+  }
+
+  if (opt.path) {
+    if (!fieldContentRegExp.test(opt.path)) {
+      throw new TypeError('option path is invalid');
+    }
+
+    pairs.push('Path=' + opt.path);
+  }
+
+  if (opt.expires) pairs.push('Expires=' + opt.expires.toUTCString());
+  if (opt.httpOnly) pairs.push('HttpOnly');
+  if (opt.secure) pairs.push('Secure');
+
+  return pairs.join('; ');
+}
+
+/**
+ * Try decoding a string using a decoding function.
+ *
+ * @param {string} str
+ * @param {function} decode
+ * @private
+ */
+
+function tryDecode(str, decode) {
+  try {
+    return decode(str);
+  } catch (e) {
+    return str;
+  }
+}
 
 
 /***/ })

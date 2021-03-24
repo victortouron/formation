@@ -1,6 +1,8 @@
 defmodule Server.Router do
   use Plug.Router
 
+  plug Plug.Static, from: "lib/mixproject/priv/static/", at: "/static"
+
   plug :match
   plug :dispatch
 
@@ -45,7 +47,8 @@ defmodule Server.Router do
   end
 
   get "/", do: send_resp(conn, 200, "Welcome")
-  match _, do: send_resp(conn, 404, "Page Not Found")
+  get _, do: send_file(conn, 200, "lib/mixproject/priv/static/index.html")
+
 end
 
   #
