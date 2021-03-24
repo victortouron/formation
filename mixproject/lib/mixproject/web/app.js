@@ -16,8 +16,6 @@ var orders = [
   {remoteid: "000000192", custom: {customer: {full_name: "Lucky Luke"}, billing_address: "A Cowboy doesn't have an address. Sorry"}, items: 0},
 ]
 
-
-
 //To render this JSON in the table, we will have to map the list on a **`JSXZ`** render.
 var Page = createReactClass({
   render: function(){
@@ -39,81 +37,88 @@ var Page = createReactClass({
   }
 })
 
-ReactDOM.render(
-  <Page/>,
-  document.getElementById('root')
-)
+// ReactDOM.render(
+//   <Page />,
+//   document.getElementById('root')
+// );
 
-// var Layout = createReactClass({
-// render(){
-//   return <JSXZ in="orders" sel=".layout">
-//       <Z sel=".layout-container">
-//         <this.props.Child {...this.props}/>
-//       </Z>
-//     </JSXZ>
-//   }
-// })
-// var routes = {
-//   "orders": {
-//     path: (params) => {
-//       return "/";
-//     },
-//     match: (path, qs) => {
-//       return (path == "/") && {handlerPath: [Layout, Header, Orders]}
-//     }
-//   },
-//   "order": {
-//     path: (params) => {
-//       return "/order/" + params;
-//     },
-//     match: (path, qs) => {
-//       var r = new RegExp("/order/([^/]*)$").exec(path)
-//       return r && {handlerPath: [Layout, Header, Order],  order_id: r[1]}
-//     }
-//   }
-// }
-//
-// var Child = createReactClass({
-//   render(){
-//     var [ChildHandler,...rest] = this.props.handlerPath
-//     return <ChildHandler {...this.props} handlerPath={rest} />
-//   }
-// })
-//
-// function onPathChange() {
-//   var path = location.pathname
-//   var qs = Qs.parse(location.search.slice(1))
-//   var cookies = Cookie.parse(document.cookie)
-//   console.log(path)
-//   console.log(qs)
-//   console.log(cookies)
-//
-//   browserState = {
-//     ...browserState,
-//     path: path,
-//     qs: qs,
-//     cookie: cookies
-//   }
-//
-//   var route, routeProps
-//   //We try to match the requested path to one our our routes
-//   for(var key in routes) {
-//     routeProps = routes[key].match(path, qs)
-//     if(routeProps){
-//         route = key
-//           break;
-//     }
-//   }
-//   browserState = {
-//     ...browserState,
-//     ...routeProps,
-//     route: route
-//   }
-//   //If we don't have a match, we render an Error component
-//   if(!route)
-//     return ReactDOM.render(<ErrorPage message={"Not Found"} code={404}/>, document.getElementById('root'))
-//   ReactDOM.render(<Child {...browserState}/>, document.getElementById('root'))
-// }
-//
-// window.addEventListener("popstate", ()=>{ onPathChange() })
-// onPathChange()
+var ErrorPage = createReactClass({
+  render(){
+    return <h1>{this.props.code} / {this.props.message}</h1>;
+  }
+})
+
+var Layout = createReactClass({
+  render(){
+    return <JSXZ in="orders" sel=".orders">
+    <Z sel=".table-body">
+    <this.props.Child {...this.props}/>
+    </Z>
+    </JSXZ>
+  }
+})
+
+var Child = createReactClass({
+  render(){
+    var [ChildHandler,...rest] = this.props.handlerPath
+    return <ChildHandler {...this.props} handlerPath={rest} />
+  }
+})
+
+var routes = {
+  "orders": {
+    path: (params) => {
+      return "/";
+    },
+    match: (path, qs) => {
+      return (path == "/") && {handlerPath: [Page]}
+    }
+  },
+  "order": {
+    path: (params) => {
+      return "/order/" + params;
+    },
+    match: (path, qs) => {
+      var r = new RegExp("/order/([^/]*)$").exec(path)
+      return r && {handlerPath: [Page],  order_id: r[1]}
+    }
+  }
+}
+
+function onPathChange() {
+  var path = location.pathname
+  var qs = Qs.parse(location.search.slice(1))
+  var cookies = Cookie.parse(document.cookie)
+  browserState = {
+    ...browserState,
+    path: path,
+    qs: qs,
+    cookie: cookies
+  }
+  var route, routeProps
+  //We try to match the requested path to one our our routes
+  for(var key in routes) {
+    console.log(key)
+    routeProps = routes[key].match(path, qs)
+    if(routeProps){
+      route = key
+      break;
+    }
+  }
+  browserState = {
+    ...browserState,
+    ...routeProps,
+    route: route
+  }
+  //If we don't have a match, we render an Error component
+  if(!route) {
+    console.log("error")
+    return ReactDOM.render(<ErrorPage message={"Not Found"} code={404}/>, document.getElementById('root'))
+  }
+  console.log("succes")
+  ReactDOM.render(<Child {...browserState}/>, document.getElementById('root'))
+  // ReactDOM.render(<Page />, document.getElementById('root'));
+}
+
+window.addEventListener("popstate", ()=>{ onPathChange() })
+onPathChange()

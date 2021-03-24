@@ -10748,6 +10748,10 @@ exports.isBuffer = function (obj) {
 "use strict";
 
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _toArray(arr) { return Array.isArray(arr) ? arr : Array.from(arr); }
+
 // require('!!file-loader?name=[name].[ext]!./tuto.webflow/orders.html')
 __webpack_require__(85);
 __webpack_require__(86);
@@ -11128,81 +11132,405 @@ var Page = createReactClass({
   }
 });
 
-ReactDOM.render(React.createElement(Page, null), document.getElementById('root'));
+// ReactDOM.render(
+//   <Page />,
+//   document.getElementById('root')
+// );
 
-// var Layout = createReactClass({
-// render(){
-//   return <JSXZ in="orders" sel=".layout">
-//       <Z sel=".layout-container">
-//         <this.props.Child {...this.props}/>
-//       </Z>
-//     </JSXZ>
-//   }
-// })
-// var routes = {
-//   "orders": {
-//     path: (params) => {
-//       return "/";
-//     },
-//     match: (path, qs) => {
-//       return (path == "/") && {handlerPath: [Layout, Header, Orders]}
-//     }
-//   },
-//   "order": {
-//     path: (params) => {
-//       return "/order/" + params;
-//     },
-//     match: (path, qs) => {
-//       var r = new RegExp("/order/([^/]*)$").exec(path)
-//       return r && {handlerPath: [Layout, Header, Order],  order_id: r[1]}
-//     }
-//   }
-// }
-//
-// var Child = createReactClass({
-//   render(){
-//     var [ChildHandler,...rest] = this.props.handlerPath
-//     return <ChildHandler {...this.props} handlerPath={rest} />
-//   }
-// })
-//
-// function onPathChange() {
-//   var path = location.pathname
-//   var qs = Qs.parse(location.search.slice(1))
-//   var cookies = Cookie.parse(document.cookie)
-//   console.log(path)
-//   console.log(qs)
-//   console.log(cookies)
-//
-//   browserState = {
-//     ...browserState,
-//     path: path,
-//     qs: qs,
-//     cookie: cookies
-//   }
-//
-//   var route, routeProps
-//   //We try to match the requested path to one our our routes
-//   for(var key in routes) {
-//     routeProps = routes[key].match(path, qs)
-//     if(routeProps){
-//         route = key
-//           break;
-//     }
-//   }
-//   browserState = {
-//     ...browserState,
-//     ...routeProps,
-//     route: route
-//   }
-//   //If we don't have a match, we render an Error component
-//   if(!route)
-//     return ReactDOM.render(<ErrorPage message={"Not Found"} code={404}/>, document.getElementById('root'))
-//   ReactDOM.render(<Child {...browserState}/>, document.getElementById('root'))
-// }
-//
-// window.addEventListener("popstate", ()=>{ onPathChange() })
-// onPathChange()
+var ErrorPage = createReactClass({
+  displayName: 'ErrorPage',
+  render: function render() {
+    return React.createElement(
+      'h1',
+      null,
+      this.props.code,
+      ' / ',
+      this.props.message
+    );
+  }
+});
+
+var Layout = createReactClass({
+  displayName: 'Layout',
+  render: function render() {
+    return React.createElement(
+      'div',
+      {
+        className: 'orders',
+        id: 'orders'
+      },
+      React.createElement(
+        'div',
+        {
+          className: 'headder'
+        },
+        React.createElement(
+          'div',
+          {
+            className: 'title'
+          },
+          React.createElement(
+            'h1',
+            {
+              className: 'heading'
+            },
+            'Orders',
+            React.createElement(
+              'span',
+              {
+                className: 'logo'
+              },
+              '\uF0D1'
+            )
+          )
+        ),
+        React.createElement(
+          'div',
+          {
+            className: 'form'
+          },
+          React.createElement(
+            'div',
+            {
+              className: 'search'
+            },
+            React.createElement(
+              'div',
+              {
+                className: 'form-search w-form'
+              },
+              React.createElement(
+                'form',
+                {
+                  id: 'email-form',
+                  name: 'email-form',
+                  'data-name': 'Email Form',
+                  className: 'form-4'
+                },
+                React.createElement(
+                  'label',
+                  {
+                    htmlFor: 'name',
+                    className: 'field-label-4'
+                  },
+                  'Search ',
+                  React.createElement(
+                    'span',
+                    {
+                      className: 'text-span-5'
+                    },
+                    '\uF002'
+                  )
+                ),
+                React.createElement('input', {
+                  type: 'text',
+                  className: 'text-field-3 w-input',
+                  maxLength: 256,
+                  name: 'name',
+                  'data-name': 'Name',
+                  placeholder: '',
+                  id: 'name'
+                }),
+                React.createElement('input', {
+                  type: 'submit',
+                  defaultValue: 'Submit',
+                  'data-wait': 'Please wait...',
+                  className: 'submit-button-3 w-button'
+                })
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'w-form-done'
+                },
+                React.createElement(
+                  'div',
+                  null,
+                  'Thank you! Your submission has been received!'
+                )
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'w-form-fail'
+                },
+                React.createElement(
+                  'div',
+                  null,
+                  'Oops! Something went wrong while submitting the form.'
+                )
+              )
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'login'
+            },
+            React.createElement(
+              'div',
+              {
+                className: 'form-login w-form'
+              },
+              React.createElement(
+                'form',
+                {
+                  id: 'email-form',
+                  name: 'email-form',
+                  'data-name': 'Email Form',
+                  className: 'form-5'
+                },
+                React.createElement(
+                  'label',
+                  {
+                    htmlFor: 'name-2',
+                    className: 'field-label-5'
+                  },
+                  'John Doe'
+                ),
+                React.createElement('input', {
+                  type: 'submit',
+                  defaultValue: 'Login',
+                  'data-wait': 'Please wait...',
+                  className: 'w-button'
+                })
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'w-form-done'
+                },
+                React.createElement(
+                  'div',
+                  null,
+                  'Thank you! Your submission has been received!'
+                )
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'w-form-fail'
+                },
+                React.createElement(
+                  'div',
+                  null,
+                  'Oops! Something went wrong while submitting the form.'
+                )
+              )
+            )
+          )
+        )
+      ),
+      React.createElement(
+        'div',
+        {
+          className: 'table',
+          id: 'table'
+        },
+        React.createElement(
+          'div',
+          {
+            className: 'table-headder'
+          },
+          React.createElement(
+            'div',
+            {
+              className: 'col-1'
+            },
+            React.createElement(
+              'div',
+              null,
+              'Command Number'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'col-2'
+            },
+            React.createElement(
+              'div',
+              null,
+              'Customer'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'col-3'
+            },
+            React.createElement(
+              'div',
+              null,
+              'Adress'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'col-4'
+            },
+            React.createElement(
+              'div',
+              null,
+              'Quantity'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'col-5'
+            },
+            React.createElement(
+              'div',
+              null,
+              'Details'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'col-6'
+            },
+            React.createElement(
+              'div',
+              null,
+              'Pay'
+            )
+          )
+        ),
+        React.createElement(
+          'div',
+          {
+            className: 'table-body',
+            id: 'table-body'
+          },
+          React.createElement(this.props.Child, this.props)
+        )
+      ),
+      React.createElement(
+        'div',
+        {
+          className: 'footer'
+        },
+        React.createElement(
+          'div',
+          {
+            className: 'pagination'
+          },
+          React.createElement(
+            'div',
+            {
+              className: 'firstpage'
+            },
+            '\uF04A'
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'previouspage'
+            },
+            React.createElement(
+              'span',
+              {
+                className: 'text-span-6'
+              },
+              '\uF060'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'currentpage'
+            },
+            '1'
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'nextpage'
+            },
+            '\uF061'
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'lastpage'
+            },
+            '\uF04E'
+          )
+        )
+      )
+    );
+  }
+});
+
+var Child = createReactClass({
+  displayName: 'Child',
+  render: function render() {
+    var _props$handlerPath = _toArray(this.props.handlerPath),
+        ChildHandler = _props$handlerPath[0],
+        rest = _props$handlerPath.slice(1);
+
+    return React.createElement(ChildHandler, _extends({}, this.props, { handlerPath: rest }));
+  }
+});
+
+var routes = {
+  "orders": {
+    path: function path(params) {
+      return "/";
+    },
+    match: function match(path, qs) {
+      return path == "/" && { handlerPath: [Page] };
+    }
+  },
+  "order": {
+    path: function path(params) {
+      return "/order/" + params;
+    },
+    match: function match(path, qs) {
+      var r = new RegExp("/order/([^/]*)$").exec(path);
+      return r && { handlerPath: [Page], order_id: r[1] };
+    }
+  }
+};
+
+function onPathChange() {
+  var path = location.pathname;
+  var qs = Qs.parse(location.search.slice(1));
+  var cookies = Cookie.parse(document.cookie);
+  browserState = _extends({}, browserState, {
+    path: path,
+    qs: qs,
+    cookie: cookies
+  });
+  var route, routeProps;
+  //We try to match the requested path to one our our routes
+  for (var key in routes) {
+    console.log(key);
+    routeProps = routes[key].match(path, qs);
+    if (routeProps) {
+      route = key;
+      break;
+    }
+  }
+  browserState = _extends({}, browserState, routeProps, {
+    route: route
+    //If we don't have a match, we render an Error component
+  });if (!route) {
+    console.log("error");
+    return ReactDOM.render(React.createElement(ErrorPage, { message: "Not Found", code: 404 }), document.getElementById('root'));
+  }
+  console.log("succes");
+  ReactDOM.render(React.createElement(Child, browserState), document.getElementById('root'));
+  // ReactDOM.render(<Page />, document.getElementById('root'));
+}
+
+window.addEventListener("popstate", function () {
+  onPathChange();
+});
+onPathChange();
 
 /***/ }),
 /* 85 */

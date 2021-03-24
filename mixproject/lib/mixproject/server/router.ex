@@ -46,7 +46,8 @@ defmodule Server.Router do
     check_is_nil(reply, conn)
   end
 
-  get "/", do: send_resp(conn, 200, "Welcome")
+  # get "/", do: send_resp(conn, 200, "Welcome")
+  # get "/orders", do: send_file(conn, 200, "lib/mixproject/priv/static/index.html")
   get _, do: send_file(conn, 200, "lib/mixproject/priv/static/index.html")
 
 end
