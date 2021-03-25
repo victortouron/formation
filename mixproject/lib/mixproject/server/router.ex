@@ -46,8 +46,11 @@ defmodule Server.Router do
     check_is_nil(reply, conn)
   end
 
-  # get "/", do: send_resp(conn, 200, "Welcome")
-  # get "/orders", do: send_file(conn, 200, "lib/mixproject/priv/static/index.html")
+  get "/api/orders" do
+    json = Poison.encode!(Enum.map(Server.Database.get_table(), fn {_key, map} -> map end))
+    send_resp(conn, 200, json)
+  end
+
   get _, do: send_file(conn, 200, "lib/mixproject/priv/static/index.html")
 
 end

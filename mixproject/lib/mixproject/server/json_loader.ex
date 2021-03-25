@@ -3,7 +3,7 @@ defmodule JsonLoader do
     {:ok, file_content} = File.read(json_file)
     {:ok, map} = Poison.decode(file_content)
     Enum.reduce(map, [], fn x, _acc ->
-      Server.Database.create(database, {Map.get(x, "id"), Map.get(x, "custom")})
+      Server.Database.create(database, {Map.get(x, "id"), x})
     end)
     # {:ok}
   end
