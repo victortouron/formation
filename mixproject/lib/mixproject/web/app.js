@@ -1,4 +1,3 @@
-// require('!!file-loader?name=[name].[ext]!./tuto.webflow/orders.html')
 require('./tuto.webflow/css/tuto.webflow.css');
 require('!!file-loader?name=[name].[ext]!./index.html')
 
@@ -7,7 +6,6 @@ var React = require('react')
 var createReactClass = require('create-react-class')
 var Qs = require('qs')
 var Cookie = require('cookie')
-var browserState = {}
 
 var orders = [
   {remoteid: "000000189", custom: {customer: {full_name: "TOTO & CIE"}, billing_address: "Some where in the world"}, items: 2},
@@ -18,12 +16,12 @@ var orders = [
 
 //To render this JSON in the table, we will have to map the list on a **`JSXZ`** render.
 var Page = createReactClass({
-  render: function(){
-
-    return <JSXZ in="orders" sel=".orders">
+  render(){
+    var i = 0
+    return <JSXZ in="orders" sel=".layout">
     <Z sel=".table-body">
     {
-      orders.map( order => (<JSXZ in="orders" sel=".table-line">
+      orders.map( order => (<JSXZ in="orders" key={i++} sel=".table-line">
       <Z sel=".col-1">{order.remoteid}</Z>
       <Z sel=".col-2">{order.custom.customer.full_name}</Z>
       <Z sel=".col-3">{order.custom.billing_address}</Z>
@@ -37,11 +35,6 @@ var Page = createReactClass({
   }
 })
 
-// ReactDOM.render(
-//   <Page />,
-//   document.getElementById('root')
-// );
-
 var ErrorPage = createReactClass({
   render(){
     return <h1>{this.props.code} / {this.props.message}</h1>;
@@ -50,9 +43,39 @@ var ErrorPage = createReactClass({
 
 var Layout = createReactClass({
   render(){
-    return <JSXZ in="orders" sel=".orders">
-    <Z sel=".table-body">
+    return <JSXZ in="orders" sel=".layout">
+    <Z sel=".layout-container">
     <this.props.Child {...this.props}/>
+    </Z>
+    </JSXZ>
+  }
+})
+
+var Header = createReactClass({
+  render(){
+    return <JSXZ in="orders" sel=".header">
+    <Z sel=".header-container">
+    <this.props.Child {...this.props}/>
+    </Z>
+    </JSXZ>
+  }
+})
+
+var Orders = createReactClass({
+  render(){
+    var i = 0
+    return <JSXZ in="orders" sel=".orders-container">
+    <Z sel=".table-body">
+    {
+      orders.map( order => (<JSXZ in="orders" key={i++} sel=".table-line">
+      <Z sel=".col-1">{order.remoteid}</Z>
+      <Z sel=".col-2">{order.custom.customer.full_name}</Z>
+      <Z sel=".col-3">{order.custom.billing_address}</Z>
+      <Z sel=".col-4">{order.items}</Z>
+      <Z sel=".col-5">Details</Z>
+      <Z sel=".col-6">Pay</Z>
+      </JSXZ>))
+    }
     </Z>
     </JSXZ>
   }
@@ -65,13 +88,15 @@ var Child = createReactClass({
   }
 })
 
+var browserState = {Child: Child}
+
 var routes = {
   "orders": {
     path: (params) => {
       return "/";
     },
     match: (path, qs) => {
-      return (path == "/") && {handlerPath: [Page]}
+      return (path == "/") && {handlerPath: [Layout, Header, Orders]}
     }
   },
   "order": {
@@ -80,7 +105,7 @@ var routes = {
     },
     match: (path, qs) => {
       var r = new RegExp("/order/([^/]*)$").exec(path)
-      return r && {handlerPath: [Page],  order_id: r[1]}
+      return r && {handlerPath: [Layout, Header, Orders],  order_id: r[1]}
     }
   }
 }
@@ -111,11 +136,8 @@ function onPathChange() {
     route: route
   }
   //If we don't have a match, we render an Error component
-  if(!route) {
-    console.log("error")
+  if(!route)
     return ReactDOM.render(<ErrorPage message={"Not Found"} code={404}/>, document.getElementById('root'))
-  }
-  console.log("succes")
   ReactDOM.render(<Child {...browserState}/>, document.getElementById('root'))
   // ReactDOM.render(<Page />, document.getElementById('root'));
 }
