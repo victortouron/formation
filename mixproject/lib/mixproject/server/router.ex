@@ -51,6 +51,11 @@ defmodule Server.Router do
     send_resp(conn, 200, json)
   end
 
+  get "/api/order/:order_id" do
+    [{_id, map}] = Server.Database.read(:json, "nat_order" <> order_id)
+    send_resp(conn, 200, Poison.encode!(map))
+  end
+
   get _, do: send_file(conn, 200, "lib/mixproject/priv/static/index.html")
 
 end

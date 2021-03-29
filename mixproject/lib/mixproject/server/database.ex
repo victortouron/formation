@@ -5,10 +5,8 @@ defmodule Server.Database do
   def update(database, {key, value}), do: GenServer.cast(Server.Database, {:update, database, {key, value}})
   def delete(database, key), do: GenServer.cast(Server.Database, {:delete, database, key})
   def search(database, criteria), do: GenServer.call(Server.Database, {:search, database, criteria})
+  def get_table(), do: GenServer.call(__MODULE__, :get_table)
 
-  def get_table do
-    GenServer.call(__MODULE__, :get_table)
-  end
   def handle_cast({:create, database, {key, value}}, intern_state) do
     :ets.insert_new(database, {key, value})
     {:noreply, intern_state}

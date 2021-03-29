@@ -11097,394 +11097,33 @@ function addRemoteProps(props) {
   });
 }
 
-var orders = [{ remoteid: "000000189", custom: { customer: { full_name: "TOTO & CIE" }, billing_address: "Some where in the world" }, items: 2 }, { remoteid: "000000190", custom: { customer: { full_name: "Looney Toons" }, billing_address: "The Warner Bros Company" }, items: 3 }, { remoteid: "000000191", custom: { customer: { full_name: "Asterix & Obelix" }, billing_address: "Armorique" }, items: 29 }, { remoteid: "000000192", custom: { customer: { full_name: "Lucky Luke" }, billing_address: "A Cowboy doesn't have an address. Sorry" }, items: 0 }];
-
-//To render this JSON in the table, we will have to map the list on a **`JSXZ`** render.
-var Page = createReactClass({
-  displayName: 'Page',
-  render: function render() {
-    var i = 0;
-    return React.createElement(
-      'div',
-      {
-        className: 'layout'
-      },
-      React.createElement(
-        'div',
-        {
-          className: 'layout-container'
-        },
-        React.createElement(
-          'div',
-          {
-            className: 'header'
-          },
-          React.createElement(
-            'div',
-            {
-              className: 'title'
-            },
-            React.createElement(
-              'h1',
-              {
-                className: 'heading'
-              },
-              'Orders',
-              React.createElement(
-                'span',
-                {
-                  className: 'logo'
-                },
-                '\uF0D1'
-              )
-            )
-          ),
-          React.createElement(
-            'div',
-            {
-              className: 'form'
-            },
-            React.createElement(
-              'div',
-              {
-                className: 'search'
-              },
-              React.createElement(
-                'div',
-                {
-                  className: 'form-search w-form'
-                },
-                React.createElement(
-                  'form',
-                  {
-                    id: 'email-form',
-                    name: 'email-form',
-                    'data-name': 'Email Form',
-                    className: 'form-4'
-                  },
-                  React.createElement(
-                    'label',
-                    {
-                      htmlFor: 'name',
-                      className: 'field-label-4'
-                    },
-                    'Search ',
-                    React.createElement(
-                      'span',
-                      {
-                        className: 'text-span-5'
-                      },
-                      '\uF002'
-                    )
-                  ),
-                  React.createElement('input', {
-                    type: 'text',
-                    className: 'text-field-3 w-input',
-                    maxLength: 256,
-                    name: 'name',
-                    'data-name': 'Name',
-                    placeholder: '',
-                    id: 'name'
-                  }),
-                  React.createElement('input', {
-                    type: 'submit',
-                    defaultValue: 'Submit',
-                    'data-wait': 'Please wait...',
-                    className: 'submit-button-3 w-button'
-                  })
-                ),
-                React.createElement(
-                  'div',
-                  {
-                    className: 'w-form-done'
-                  },
-                  React.createElement(
-                    'div',
-                    null,
-                    'Thank you! Your submission has been received!'
-                  )
-                ),
-                React.createElement(
-                  'div',
-                  {
-                    className: 'w-form-fail'
-                  },
-                  React.createElement(
-                    'div',
-                    null,
-                    'Oops! Something went wrong while submitting the form.'
-                  )
-                )
-              )
-            ),
-            React.createElement(
-              'div',
-              {
-                className: 'login'
-              },
-              React.createElement(
-                'div',
-                {
-                  className: 'form-login w-form'
-                },
-                React.createElement(
-                  'form',
-                  {
-                    id: 'email-form',
-                    name: 'email-form',
-                    'data-name': 'Email Form',
-                    className: 'form-5'
-                  },
-                  React.createElement(
-                    'label',
-                    {
-                      htmlFor: 'name-2',
-                      className: 'field-label-5'
-                    },
-                    'John Doe'
-                  ),
-                  React.createElement('input', {
-                    type: 'submit',
-                    defaultValue: 'Login',
-                    'data-wait': 'Please wait...',
-                    className: 'w-button'
-                  })
-                ),
-                React.createElement(
-                  'div',
-                  {
-                    className: 'w-form-done'
-                  },
-                  React.createElement(
-                    'div',
-                    null,
-                    'Thank you! Your submission has been received!'
-                  )
-                ),
-                React.createElement(
-                  'div',
-                  {
-                    className: 'w-form-fail'
-                  },
-                  React.createElement(
-                    'div',
-                    null,
-                    'Oops! Something went wrong while submitting the form.'
-                  )
-                )
-              )
-            )
-          ),
-          React.createElement(
-            'div',
-            {
-              className: 'header-container'
-            },
-            React.createElement(
-              'div',
-              {
-                className: 'orders'
-              },
-              React.createElement(
-                'div',
-                {
-                  className: 'orders-container'
-                },
-                React.createElement(
-                  'div',
-                  {
-                    className: 'table'
-                  },
-                  React.createElement(
-                    'div',
-                    {
-                      className: 'table-headder'
-                    },
-                    React.createElement(
-                      'div',
-                      {
-                        className: 'col-1'
-                      },
-                      React.createElement(
-                        'div',
-                        null,
-                        'Command Number'
-                      )
-                    ),
-                    React.createElement(
-                      'div',
-                      {
-                        className: 'col-2'
-                      },
-                      React.createElement(
-                        'div',
-                        null,
-                        'Customer'
-                      )
-                    ),
-                    React.createElement(
-                      'div',
-                      {
-                        className: 'col-3'
-                      },
-                      React.createElement(
-                        'div',
-                        null,
-                        'Adress'
-                      )
-                    ),
-                    React.createElement(
-                      'div',
-                      {
-                        className: 'col-4'
-                      },
-                      React.createElement(
-                        'div',
-                        null,
-                        'Quantity'
-                      )
-                    ),
-                    React.createElement(
-                      'div',
-                      {
-                        className: 'col-5'
-                      },
-                      React.createElement(
-                        'div',
-                        null,
-                        'Details'
-                      )
-                    ),
-                    React.createElement(
-                      'div',
-                      {
-                        className: 'col-6'
-                      },
-                      React.createElement(
-                        'div',
-                        null,
-                        'Pay'
-                      )
-                    )
-                  ),
-                  React.createElement(
-                    'div',
-                    {
-                      className: 'table-body'
-                    },
-                    orders.map(function (order) {
-                      return React.createElement(
-                        'div',
-                        {
-                          className: 'table-line',
-                          key: i++ },
-                        React.createElement(
-                          'div',
-                          {
-                            className: 'col-1'
-                          },
-                          order.remoteid
-                        ),
-                        React.createElement(
-                          'div',
-                          {
-                            className: 'col-2'
-                          },
-                          order.custom.customer.full_name
-                        ),
-                        React.createElement(
-                          'div',
-                          {
-                            className: 'col-3'
-                          },
-                          order.custom.billing_address
-                        ),
-                        React.createElement(
-                          'div',
-                          {
-                            className: 'col-4'
-                          },
-                          order.items
-                        ),
-                        React.createElement(
-                          'div',
-                          {
-                            className: 'col-5'
-                          },
-                          'Details'
-                        ),
-                        React.createElement(
-                          'div',
-                          {
-                            className: 'col-6'
-                          },
-                          'Pay'
-                        )
-                      );
-                    })
-                  )
-                )
-              )
-            )
-          ),
-          React.createElement(
-            'div',
-            {
-              className: 'footer'
-            },
-            React.createElement(
-              'div',
-              {
-                className: 'pagination'
-              },
-              React.createElement(
-                'div',
-                {
-                  className: 'firstpage'
-                },
-                '\uF04A'
-              ),
-              React.createElement(
-                'div',
-                {
-                  className: 'previouspage'
-                },
-                React.createElement(
-                  'span',
-                  {
-                    className: 'text-span-6'
-                  },
-                  '\uF060'
-                )
-              ),
-              React.createElement(
-                'div',
-                {
-                  className: 'currentpage'
-                },
-                '1'
-              ),
-              React.createElement(
-                'div',
-                {
-                  className: 'nextpage'
-                },
-                '\uF061'
-              ),
-              React.createElement(
-                'div',
-                {
-                  className: 'lastpage'
-                },
-                '\uF04E'
-              )
-            )
-          )
-        )
-      )
-    );
-  }
-});
+// var orders = [
+//   {remoteid: "000000189", custom: {customer: {full_name: "TOTO & CIE"}, billing_address: "Some where in the world"}, items: 2},
+//   {remoteid: "000000190", custom: {customer: {full_name: "Looney Toons"}, billing_address: "The Warner Bros Company"}, items: 3},
+//   {remoteid: "000000191", custom: {customer: {full_name: "Asterix & Obelix"}, billing_address: "Armorique"}, items: 29},
+//   {remoteid: "000000192", custom: {customer: {full_name: "Lucky Luke"}, billing_address: "A Cowboy doesn't have an address. Sorry"}, items: 0},
+// ]
+//
+// //To render this JSON in the table, we will have to map the list on a **`JSXZ`** render.
+// var Page = createReactClass({
+//   render(){
+//     var i = 0
+//     return <JSXZ in="orders" sel=".layout">
+//     <Z sel=".table-body">
+//     {
+//       orders.map( order => (<JSXZ in="orders" key={i++} sel=".table-line">
+//       <Z sel=".col-1">{order.remoteid}</Z>
+//       <Z sel=".col-2">{order.custom.customer.full_name}</Z>
+//       <Z sel=".col-3">{order.custom.billing_address}</Z>
+//       <Z sel=".col-4">{order.items}</Z>
+//       <Z sel=".col-5">Details</Z>
+//       <Z sel=".col-6">Pay</Z>
+//       </JSXZ>))
+//     }
+//     </Z>
+//     </JSXZ>
+//   }
+// })
 
 var ErrorPage = createReactClass({
   displayName: 'ErrorPage',
@@ -11502,124 +11141,126 @@ var ErrorPage = createReactClass({
 var Layout = createReactClass({
   displayName: 'Layout',
   render: function render() {
-    return React.createElement(
-      'div',
-      {
-        className: 'layout'
-      },
-      React.createElement(
+    if (this.props.route == "order") {
+      return React.createElement(
         'div',
         {
-          className: 'layout-container'
+          className: 'layout'
         },
-        React.createElement(this.props.Child, this.props)
-      )
-    );
+        React.createElement(
+          'div',
+          {
+            className: 'layout-container'
+          },
+          React.createElement(this.props.Child, this.props)
+        )
+      );
+    } else if (this.props.route == "orders") {
+      return React.createElement(
+        'div',
+        {
+          className: 'layout'
+        },
+        React.createElement(
+          'div',
+          {
+            className: 'layout-container'
+          },
+          React.createElement(this.props.Child, this.props)
+        )
+      );
+    }
   }
 });
 
 var Header = createReactClass({
   displayName: 'Header',
   render: function render() {
-    return React.createElement(
-      'div',
-      {
-        className: 'header'
-      },
-      React.createElement(
+    if (this.props.route == "order") {
+      return React.createElement(
         'div',
         {
-          className: 'title'
-        },
-        React.createElement(
-          'h1',
-          {
-            className: 'heading'
-          },
-          'Orders',
-          React.createElement(
-            'span',
-            {
-              className: 'logo'
-            },
-            '\uF0D1'
-          )
-        )
-      ),
-      React.createElement(
-        'div',
-        {
-          className: 'form'
+          className: 'header'
         },
         React.createElement(
           'div',
           {
-            className: 'search'
+            className: 'title'
+          },
+          React.createElement(
+            'h1',
+            {
+              className: 'heading'
+            },
+            'Order ',
+            React.createElement(
+              'span',
+              {
+                className: 'logo'
+              },
+              '\uF0D1'
+            )
+          )
+        ),
+        React.createElement(
+          'div',
+          {
+            className: 'form'
           },
           React.createElement(
             'div',
             {
-              className: 'form-search w-form'
+              className: 'login'
             },
             React.createElement(
-              'form',
+              'div',
               {
-                id: 'email-form',
-                name: 'email-form',
-                'data-name': 'Email Form',
-                className: 'form-4'
+                className: 'form-login w-form'
               },
               React.createElement(
-                'label',
+                'form',
                 {
-                  htmlFor: 'name',
-                  className: 'field-label-4'
+                  id: 'email-form',
+                  name: 'email-form',
+                  'data-name': 'Email Form',
+                  className: 'form-6'
                 },
-                'Search ',
                 React.createElement(
-                  'span',
+                  'label',
                   {
-                    className: 'text-span-5'
+                    htmlFor: 'email',
+                    className: 'field-label-6'
                   },
-                  '\uF002'
+                  'John Doe'
+                ),
+                React.createElement('input', {
+                  type: 'submit',
+                  defaultValue: 'Login',
+                  'data-wait': 'Please wait...',
+                  className: 'w-button'
+                })
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'w-form-done'
+                },
+                React.createElement(
+                  'div',
+                  null,
+                  'Thank you! Your submission has been received!'
                 )
               ),
-              React.createElement('input', {
-                type: 'text',
-                className: 'text-field-3 w-input',
-                maxLength: 256,
-                name: 'name',
-                'data-name': 'Name',
-                placeholder: '',
-                id: 'name'
-              }),
-              React.createElement('input', {
-                type: 'submit',
-                defaultValue: 'Submit',
-                'data-wait': 'Please wait...',
-                className: 'submit-button-3 w-button'
-              })
-            ),
-            React.createElement(
-              'div',
-              {
-                className: 'w-form-done'
-              },
               React.createElement(
                 'div',
-                null,
-                'Thank you! Your submission has been received!'
-              )
-            ),
-            React.createElement(
-              'div',
-              {
-                className: 'w-form-fail'
-              },
-              React.createElement(
-                'div',
-                null,
-                'Oops! Something went wrong while submitting the form.'
+                {
+                  className: 'w-form-fail'
+                },
+                React.createElement(
+                  'div',
+                  null,
+                  'Oops! Something went wrong while submitting the form.'
+                )
               )
             )
           )
@@ -11627,122 +11268,267 @@ var Header = createReactClass({
         React.createElement(
           'div',
           {
-            className: 'login'
+            className: 'header-container'
+          },
+          React.createElement(this.props.Child, this.props)
+        ),
+        React.createElement(
+          'div',
+          {
+            className: 'footer'
           },
           React.createElement(
             'div',
             {
-              className: 'form-login w-form'
+              className: 'return'
             },
             React.createElement(
-              'form',
+              'div',
               {
-                id: 'email-form',
-                name: 'email-form',
-                'data-name': 'Email Form',
-                className: 'form-5'
+                className: 'text-block-7'
               },
               React.createElement(
-                'label',
+                'a',
                 {
-                  htmlFor: 'name-2',
-                  className: 'field-label-5'
+                  href: '/',
+                  className: 'link-2'
                 },
-                'John Doe'
-              ),
-              React.createElement('input', {
-                type: 'submit',
-                defaultValue: 'Login',
-                'data-wait': 'Please wait...',
-                className: 'w-button'
-              })
-            ),
-            React.createElement(
-              'div',
-              {
-                className: 'w-form-done'
-              },
-              React.createElement(
-                'div',
-                null,
-                'Thank you! Your submission has been received!'
-              )
-            ),
-            React.createElement(
-              'div',
-              {
-                className: 'w-form-fail'
-              },
-              React.createElement(
-                'div',
-                null,
-                'Oops! Something went wrong while submitting the form.'
+                React.createElement(
+                  'span',
+                  {
+                    className: 'text-span-7'
+                  },
+                  '\uF2EA'
+                )
               )
             )
           )
         )
-      ),
-      React.createElement(
+      );
+    } else if (this.props.route == "orders") {
+      return React.createElement(
         'div',
         {
-          className: 'header-container'
-        },
-        React.createElement(this.props.Child, this.props)
-      ),
-      React.createElement(
-        'div',
-        {
-          className: 'footer'
+          className: 'header'
         },
         React.createElement(
           'div',
           {
-            className: 'pagination'
+            className: 'title'
+          },
+          React.createElement(
+            'h1',
+            {
+              className: 'heading'
+            },
+            'Orders',
+            React.createElement(
+              'span',
+              {
+                className: 'logo'
+              },
+              '\uF0D1'
+            )
+          )
+        ),
+        React.createElement(
+          'div',
+          {
+            className: 'form'
           },
           React.createElement(
             'div',
             {
-              className: 'firstpage'
-            },
-            '\uF04A'
-          ),
-          React.createElement(
-            'div',
-            {
-              className: 'previouspage'
+              className: 'search'
             },
             React.createElement(
-              'span',
+              'div',
               {
-                className: 'text-span-6'
+                className: 'form-search w-form'
               },
-              '\uF060'
+              React.createElement(
+                'form',
+                {
+                  id: 'email-form',
+                  name: 'email-form',
+                  'data-name': 'Email Form',
+                  className: 'form-4'
+                },
+                React.createElement(
+                  'label',
+                  {
+                    htmlFor: 'name',
+                    className: 'field-label-4'
+                  },
+                  'Search ',
+                  React.createElement(
+                    'span',
+                    {
+                      className: 'text-span-5'
+                    },
+                    '\uF002'
+                  )
+                ),
+                React.createElement('input', {
+                  type: 'text',
+                  className: 'text-field-3 w-input',
+                  maxLength: 256,
+                  name: 'name',
+                  'data-name': 'Name',
+                  placeholder: '',
+                  id: 'name'
+                }),
+                React.createElement('input', {
+                  type: 'submit',
+                  defaultValue: 'Submit',
+                  'data-wait': 'Please wait...',
+                  className: 'submit-button-3 w-button'
+                })
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'w-form-done'
+                },
+                React.createElement(
+                  'div',
+                  null,
+                  'Thank you! Your submission has been received!'
+                )
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'w-form-fail'
+                },
+                React.createElement(
+                  'div',
+                  null,
+                  'Oops! Something went wrong while submitting the form.'
+                )
+              )
             )
           ),
           React.createElement(
             'div',
             {
-              className: 'currentpage'
+              className: 'login'
             },
-            '1'
-          ),
+            React.createElement(
+              'div',
+              {
+                className: 'form-login w-form'
+              },
+              React.createElement(
+                'form',
+                {
+                  id: 'email-form',
+                  name: 'email-form',
+                  'data-name': 'Email Form',
+                  className: 'form-5'
+                },
+                React.createElement(
+                  'label',
+                  {
+                    htmlFor: 'name-2',
+                    className: 'field-label-5'
+                  },
+                  'John Doe'
+                ),
+                React.createElement('input', {
+                  type: 'submit',
+                  defaultValue: 'Login',
+                  'data-wait': 'Please wait...',
+                  className: 'w-button'
+                })
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'w-form-done'
+                },
+                React.createElement(
+                  'div',
+                  null,
+                  'Thank you! Your submission has been received!'
+                )
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'w-form-fail'
+                },
+                React.createElement(
+                  'div',
+                  null,
+                  'Oops! Something went wrong while submitting the form.'
+                )
+              )
+            )
+          )
+        ),
+        React.createElement(
+          'div',
+          {
+            className: 'header-container'
+          },
+          React.createElement(this.props.Child, this.props)
+        ),
+        React.createElement(
+          'div',
+          {
+            className: 'footer'
+          },
           React.createElement(
             'div',
             {
-              className: 'nextpage'
+              className: 'pagination'
             },
-            '\uF061'
-          ),
-          React.createElement(
-            'div',
-            {
-              className: 'lastpage'
-            },
-            '\uF04E'
+            React.createElement(
+              'div',
+              {
+                className: 'firstpage'
+              },
+              '\uF04A'
+            ),
+            React.createElement(
+              'div',
+              {
+                className: 'previouspage'
+              },
+              React.createElement(
+                'span',
+                {
+                  className: 'text-span-6'
+                },
+                '\uF060'
+              )
+            ),
+            React.createElement(
+              'div',
+              {
+                className: 'currentpage'
+              },
+              '1'
+            ),
+            React.createElement(
+              'div',
+              {
+                className: 'nextpage'
+              },
+              '\uF061'
+            ),
+            React.createElement(
+              'div',
+              {
+                className: 'lastpage'
+              },
+              '\uF04E'
+            )
           )
         )
-      )
-    );
+      );
+    }
   }
 });
 
@@ -11754,14 +11540,6 @@ var Orders = createReactClass({
   },
   render: function render() {
     var new_orders = this.props.orders.value;
-    // new_orders.map( order => (
-    //   console.log(order.remoteid),
-    //   console.log(order.custom.customer.full_name),
-    //   console.log(order.custom.billing_address.street[0]),
-    //   console.log(order.custom.billing_address.postcode),
-    //   console.log(order.custom.billing_address.city),
-    //   console.log(order.custom.items.length)
-    // ))
     var i = 0;
     return React.createElement(
       'div',
@@ -11891,9 +11669,11 @@ var Orders = createReactClass({
               React.createElement(
                 'div',
                 {
-                  className: 'col-5'
-                },
-                'Details'
+                  className: 'col-5',
+                  onClick: function onClick(e) {
+                    return GoTo("order", order.remoteid, "");
+                  } },
+                '\uF06E'
               ),
               React.createElement(
                 'div',
@@ -11901,6 +11681,204 @@ var Orders = createReactClass({
                   className: 'col-6'
                 },
                 'Pay'
+              )
+            );
+          })
+        )
+      )
+    );
+  }
+});
+
+var Order = createReactClass({
+  displayName: 'Order',
+
+  statics: {
+    remoteProps: [remoteProps.order]
+  },
+  render: function render() {
+    var new_orders = this.props.order.value.custom.items;
+    var i = 0;
+    return React.createElement(
+      'div',
+      {
+        className: 'order-container'
+      },
+      React.createElement(
+        'div',
+        {
+          className: 'detail-table'
+        },
+        React.createElement(
+          'div',
+          {
+            className: 'detail-table-line'
+          },
+          React.createElement(
+            'div',
+            {
+              className: 'detail-col-1'
+            },
+            React.createElement(
+              'div',
+              null,
+              'Client :'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'detail-col-2 name_val'
+            },
+            this.props.order.value.custom.customer.full_name
+          )
+        ),
+        React.createElement(
+          'div',
+          {
+            className: 'detail-table-line'
+          },
+          React.createElement(
+            'div',
+            {
+              className: 'detail-col-1'
+            },
+            React.createElement(
+              'div',
+              null,
+              'Address :'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'detail-col-2 add_val'
+            },
+            this.props.order.value.custom.shipping_address.street[0],
+            ', ',
+            this.props.order.value.custom.shipping_address.postcode,
+            ' ',
+            this.props.order.value.custom.shipping_address.city
+          )
+        ),
+        React.createElement(
+          'div',
+          {
+            className: 'detail-table-line'
+          },
+          React.createElement(
+            'div',
+            {
+              className: 'detail-col-1'
+            },
+            React.createElement(
+              'div',
+              null,
+              'Command Number :'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'detail-col-2 comm_val'
+            },
+            this.props.order.value.custom.order_number
+          )
+        )
+      ),
+      React.createElement(
+        'div',
+        {
+          className: 'table'
+        },
+        React.createElement(
+          'div',
+          {
+            className: 'table-headder'
+          },
+          React.createElement(
+            'div',
+            {
+              className: 'col-1'
+            },
+            React.createElement(
+              'div',
+              null,
+              'Product Name'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'col-2'
+            },
+            React.createElement(
+              'div',
+              null,
+              'Quantity'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'col-3'
+            },
+            React.createElement(
+              'div',
+              null,
+              'Unit Price'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'col-4'
+            },
+            React.createElement(
+              'div',
+              null,
+              'Total Price'
+            )
+          )
+        ),
+        React.createElement(
+          'div',
+          {
+            className: 'table-body'
+          },
+          new_orders.map(function (order) {
+            return React.createElement(
+              'div',
+              {
+                className: 'table-line',
+                key: i++ },
+              React.createElement(
+                'div',
+                {
+                  className: 'col-1'
+                },
+                order.product_title
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'col-2'
+                },
+                order.quantity_to_fetch
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'col-3'
+                },
+                order.unit_price
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'col-4'
+                },
+                order.quantity_to_fetch * order.unit_price
               )
             );
           })
@@ -11938,9 +11916,22 @@ var routes = {
     },
     match: function match(path, qs) {
       var r = new RegExp("/order/([^/]*)$").exec(path);
-      return r && { handlerPath: [Layout, Header, Orders], order_id: r[1] };
+      return r && { handlerPath: [Layout, Header, Order], order_id: r[1] };
     }
   }
+};
+
+function redirect(remoteid, e) {
+  console.log("HANDLE");
+  console.log(remoteid);
+  GoTo("order", remoteid, "");
+}
+
+var GoTo = function GoTo(route, params, query) {
+  var qs = Qs.stringify(query);
+  var url = routes[route].path(params) + (qs == '' ? '' : '?' + qs);
+  history.pushState({}, "", url);
+  onPathChange();
 };
 
 function onPathChange() {
