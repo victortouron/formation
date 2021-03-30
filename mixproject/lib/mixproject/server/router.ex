@@ -61,7 +61,7 @@ defmodule Server.Router do
     {:ok, res} = Poison.decode(data)
     {_key, value} = List.first(Map.to_list(res))
     Server.Database.delete(:json, value)
-    body = Poison.encode!("CECI EST UN TEST")
+    body = Poison.encode!("Delete")
     :timer.sleep(2000)
     send_resp(conn, 200, body)
   end
@@ -69,15 +69,3 @@ defmodule Server.Router do
   get _, do: send_file(conn, 200, "lib/mixproject/priv/static/index.html")
 
 end
-
-  #
-  # defmodule Server.Router do
-  #   use Server.TheCreator
-  #     my_error code: 404, content: "Custom error message"
-  #     my_get "/" do
-  #       {200, "Welcome to the new world of Plugs!"}
-  #     end
-  #     my_get "/me" do
-  #       {200, "You are the Second One."}
-  #     end
-  #   end
