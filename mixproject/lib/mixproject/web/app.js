@@ -1,4 +1,5 @@
 require('./tuto.webflow/css/tuto.webflow.css');
+require('./tuto.webflow/css/modal.loader.css');
 require('!!file-loader?name=[name].[ext]!./index.html')
 
 var ReactDOM = require('react-dom')
@@ -130,8 +131,56 @@ var ErrorPage = createReactClass({
   }
 })
 
-var Layout = createReactClass({
+var cn = function(){
+  var args = arguments, classes = {}
+  for (var i in args) {
+    var arg = args[i]
+    if(!arg) continue
+    if ('string' === typeof arg || 'number' === typeof arg) {
+      arg.split(" ").filter((c)=> c!="").map((c)=>{
+        classes[c] = true
+      })
+    } else if ('object' === typeof arg) {
+      for (var key in arg) classes[key] = arg[key]
+    }
+  }
+  return Object.keys(classes).map((k)=> classes[k] && k || '').join(' ')
+}
+
+var DeleteModal = React.createClass({
   render(){
+    return <JSXZ in="modal" sel=".modal-content">
+    <Z sel=".title">{this.props.title}</Z>
+    <Z sel=".yes_button"></Z>
+    <Z sel=".no_button">No</Z>
+    </JSXZ>
+  }
+})
+
+var Layout = createReactClass({
+  getInitialState: function () {
+    return {
+      modal: null
+    }
+  },
+  modal(spec){
+    this.setState({modal: {
+      ...spec, callback: (res)=>{
+        this.setState({modal: null},()=>{
+          if(spec.callback) spec.callback(res)
+        })
+      }
+    }})
+  },
+  render(){
+    var props = {
+      ...this.props, modal: this.modal
+    }
+    var modal_component = {
+      'delete': (props) => <DeleteModal {...props}/>
+    }[this.state.modal && this.state.modal.type];
+    modal_component = modal_component && modal_component(this.state.modal)
+
     if (this.props.route == "order") {
       return <JSXZ in="order" sel=".layout">
       <Z sel=".layout-container">
@@ -142,7 +191,10 @@ var Layout = createReactClass({
     else if (this.props.route == "orders") {
       return <JSXZ in="orders" sel=".layout">
       <Z sel=".layout-container">
-      <this.props.Child {...this.props}/>
+      <this.props.Child {...props}/>
+      </Z>
+      <Z sel=".modal-wrapper" className={cn(classNameZ, {'hidden': !modal_component})}>
+        {modal_component}
       </Z>
       </JSXZ>
     }
@@ -175,6 +227,23 @@ var Orders = createReactClass({
   render(){
     var new_orders = this.props.orders.value
     var i = 0
+    function handle_delete(id, props) {
+      var data = {
+        order: "nat_order" + id
+      };
+      props.modal({
+        type: 'delete',
+        title: 'Order deletion',
+        message: `Are you sure you want to delete this ?`,
+        callback: (value)=>{
+          console.log(value)
+          // HTTP.post("/api/delete", data).then(res => {
+          //   window.location.reload()
+          // })
+          //Do something with the return value
+        }
+      })
+    }
     return <JSXZ in="orders" sel=".orders-container">
     <Z sel=".table-body">
     {
@@ -184,7 +253,7 @@ var Orders = createReactClass({
       <Z sel=".col-3">{order.custom.billing_address.street[0]}, {order.custom.billing_address.postcode} {order.custom.billing_address.city}</Z>
       <Z sel=".col-4">{order.custom.items.length}</Z>
       <Z sel=".col-5" onClick={(e) => GoTo("order", order.remoteid, "")}></Z>
-      <Z sel=".col-6">Pay</Z>
+      <Z sel=".col-6" onClick={(e) => handle_delete(order.remoteid, this.props)}></Z>
       </JSXZ>))
     }
     </Z>
@@ -244,12 +313,6 @@ var routes = {
       return r && {handlerPath: [Layout, Header, Order],  order_id: r[1]}
     }
   }
-}
-
-function redirect(remoteid, e) {
-  console.log("HANDLE")
-  console.log(remoteid)
-  GoTo("order", remoteid, "")
 }
 
 var GoTo = (route, params, query) => {
