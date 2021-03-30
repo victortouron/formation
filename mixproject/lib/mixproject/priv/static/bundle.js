@@ -11167,6 +11167,8 @@ var cn = function cn() {
 var DeleteModal = React.createClass({
   displayName: 'DeleteModal',
   render: function render() {
+    var _this2 = this;
+
     return React.createElement(
       'div',
       {
@@ -11180,9 +11182,9 @@ var DeleteModal = React.createClass({
         React.createElement(
           'h1',
           {
-            className: 'title'
+            className: 'modal_title'
           },
-          this.props.title
+          this.props.message
         )
       ),
       React.createElement(
@@ -11193,20 +11195,40 @@ var DeleteModal = React.createClass({
         React.createElement(
           'a',
           {
-            href: '#',
-            className: 'yes_button w-button'
-          },
+            className: 'yes_button w-button',
+            onClick: function onClick(e) {
+              return _this2.props.callback(true);
+            } },
           'Yes'
         ),
         React.createElement(
           'a',
           {
-            href: '#',
-            className: 'no_button w-button'
-          },
+            className: 'no_button w-button',
+            onClick: function onClick(e) {
+              return window.location.reload();
+            } },
           'No'
         )
       )
+    );
+  }
+});
+
+var Loader = createReactClass({
+  displayName: 'Loader',
+  render: function render() {
+    return React.createElement(
+      'div',
+      {
+        className: 'loader-content'
+      },
+      React.createElement('img', {
+        src: 'https://uploads-ssl.webflow.com/6059d3f8730f6145a529a455/6059ef1ce680f0317d9849c8_Bean%20Eater-1s-200px.gif',
+        loading: 'lazy',
+        alt: 'loader',
+        className: 'image'
+      })
     );
   }
 });
@@ -11216,28 +11238,43 @@ var Layout = createReactClass({
 
   getInitialState: function getInitialState() {
     return {
-      modal: null
+      modal: null,
+      loader: false
     };
   },
   modal: function modal(spec) {
-    var _this2 = this;
+    var _this3 = this;
 
     this.setState({ modal: _extends({}, spec, { callback: function callback(res) {
-          _this2.setState({ modal: null }, function () {
+          _this3.setState({ modal: null }, function () {
             if (spec.callback) spec.callback(res);
           });
         }
       }) });
   },
-  render: function render() {
-    var props = _extends({}, this.props, { modal: this.modal
+  loader: function loader(promise) {
+    var _this4 = this;
+
+    this.setState({ loader: true });
+    return promise.then(function () {
+      _this4.setState({ loader: false });
     });
+  },
+  render: function render() {
+    var props = _extends({}, this.props, { modal: this.modal, loader: this.loader
+    });
+
     var modal_component = {
       'delete': function _delete(props) {
         return React.createElement(DeleteModal, props);
       }
     }[this.state.modal && this.state.modal.type];
     modal_component = modal_component && modal_component(this.state.modal);
+
+    var loader_component = this.state.loader && function () {
+      return React.createElement(Loader, null);
+    };
+    loader_component = loader_component && loader_component(this.state.loader);
 
     if (this.props.route == "order") {
       return React.createElement(
@@ -11270,6 +11307,11 @@ var Layout = createReactClass({
           'div',
           { className: cn('modal-wrapper', { 'hidden': !modal_component }) },
           modal_component
+        ),
+        React.createElement(
+          'div',
+          { className: cn('loader-wrapper', { 'hidden': !loader_component }) },
+          loader_component
         )
       );
     }
@@ -11642,7 +11684,7 @@ var Orders = createReactClass({
     remoteProps: [remoteProps.orders]
   },
   render: function render() {
-    var _this3 = this;
+    var _this5 = this;
 
     var new_orders = this.props.orders.value;
     var i = 0;
@@ -11655,10 +11697,9 @@ var Orders = createReactClass({
         title: 'Order deletion',
         message: 'Are you sure you want to delete this ?',
         callback: function callback(value) {
-          console.log(value);
-          // HTTP.post("/api/delete", data).then(res => {
-          //   window.location.reload()
-          // })
+          console.log(value), console.log(data), props.loader(HTTP.post("/api/delete", data).then(function (res) {
+            window.location.reload();
+          }));
           //Do something with the return value
         }
       });
@@ -11802,7 +11843,7 @@ var Orders = createReactClass({
                 {
                   className: 'col-6',
                   onClick: function onClick(e) {
-                    return handle_delete(order.remoteid, _this3.props);
+                    return handle_delete(order.remoteid, _this5.props);
                   } },
                 '\uF2ED'
               )

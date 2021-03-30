@@ -56,6 +56,16 @@ defmodule Server.Router do
     send_resp(conn, 200, Poison.encode!(map))
   end
 
+  post "/api/delete" do
+    {:ok, data, _conn} = read_body(conn)
+    {:ok, res} = Poison.decode(data)
+    {_key, value} = List.first(Map.to_list(res))
+    Server.Database.delete(:json, value)
+    body = Poison.encode!("CECI EST UN TEST")
+    :timer.sleep(2000)
+    send_resp(conn, 200, body)
+  end
+
   get _, do: send_file(conn, 200, "lib/mixproject/priv/static/index.html")
 
 end

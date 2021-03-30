@@ -150,18 +150,26 @@ var cn = function(){
 var DeleteModal = React.createClass({
   render(){
     return <JSXZ in="modal" sel=".modal-content">
-    <Z sel=".title">{this.props.title}</Z>
-    <Z sel=".yes_button"></Z>
-    <Z sel=".no_button">No</Z>
+    <Z sel=".modal_title">{this.props.message}</Z>
+    <Z sel=".yes_button" onClick={(e) => this.props.callback(true)}>Yes</Z>
+    <Z sel=".no_button" onClick={(e) => window.location.reload()}>No</Z>
     </JSXZ>
   }
 })
 
+var Loader = createReactClass({
+  render(){
+    return <JSXZ in="loader" sel=".loader-content">
+    </JSXZ>
+  }
+});
+
 var Layout = createReactClass({
-  getInitialState: function () {
+  getInitialState: function() {
     return {
-      modal: null
-    }
+      modal: null,
+      loader: false
+    };
   },
   modal(spec){
     this.setState({modal: {
@@ -172,14 +180,24 @@ var Layout = createReactClass({
       }
     }})
   },
+  loader(promise) {
+    this.setState({loader: true});
+    return promise.then(() => {
+      this.setState({loader: false});
+    })
+  },
   render(){
     var props = {
-      ...this.props, modal: this.modal
+      ...this.props, modal: this.modal, loader: this.loader
     }
+
     var modal_component = {
       'delete': (props) => <DeleteModal {...props}/>
     }[this.state.modal && this.state.modal.type];
     modal_component = modal_component && modal_component(this.state.modal)
+
+    var loader_component = this.state.loader && (() => <Loader />)
+    loader_component = loader_component && loader_component(this.state.loader)
 
     if (this.props.route == "order") {
       return <JSXZ in="order" sel=".layout">
@@ -195,6 +213,9 @@ var Layout = createReactClass({
       </Z>
       <Z sel=".modal-wrapper" className={cn(classNameZ, {'hidden': !modal_component})}>
         {modal_component}
+      </Z>
+      <Z sel=".loader-wrapper" className={cn(classNameZ, {'hidden': !loader_component})}>
+        {loader_component}
       </Z>
       </JSXZ>
     }
@@ -236,10 +257,11 @@ var Orders = createReactClass({
         title: 'Order deletion',
         message: `Are you sure you want to delete this ?`,
         callback: (value)=>{
-          console.log(value)
-          // HTTP.post("/api/delete", data).then(res => {
-          //   window.location.reload()
-          // })
+          console.log(value),
+          console.log(data),
+          props.loader(HTTP.post("/api/delete", data).then(res => {
+            window.location.reload();
+          }));
           //Do something with the return value
         }
       })

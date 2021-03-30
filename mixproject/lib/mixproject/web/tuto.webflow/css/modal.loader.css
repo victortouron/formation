@@ -54,6 +54,10 @@
   background-color: #e2e2e2;
 }
 
+.loader-wrapper.hidden {
+  display: none;
+}
+
 .loader-content {
   position: fixed;
   left: 0%;
@@ -76,4 +80,9 @@
   -ms-flex-align: center;
   align-items: center;
   background-color: #fff;
+}
+
+.image {
+  display: block;
+  margin: 0px;
 }
