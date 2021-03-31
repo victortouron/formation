@@ -24,15 +24,15 @@ var HTTP = new (function(){
     req.setRequestHeader("content-type","application/json")
     req.onload = ()=>{
       if(req.status >= 200 && req.status < 300){
-      resolve(req.responseText && JSON.parse(req.responseText))
+        resolve(req.responseText && JSON.parse(req.responseText))
       }else{
-      reject({http_code: req.status})
+        reject({http_code: req.status})
       }
     }
-  req.onerror = (err)=>{
-    reject({http_code: req.status})
-  }
-  req.send(data && JSON.stringify(data))
+    req.onerror = (err)=>{
+      reject({http_code: req.status})
+    }
+    req.send(data && JSON.stringify(data))
   })
 })()
 
@@ -81,18 +81,26 @@ function addRemoteProps(props){
     if(remoteProps.length == 0)
     return resolve(props)
     // check out https://github.com/cujojs/when/blob/master/docs/api.md#whenmap and https://github.com/cujojs/when/blob/master/docs/api.md#whenreduce
-    var promise = When.map( // Returns a Promise that either on a list of resolved remoteProps, or on the rejected value by the first fetch who failed
-      remoteProps.map((spec)=>{ // Returns a list of Promises that resolve on list of resolved remoteProps ([{url: '/api/me', value: {name: 'Guillaume'}, prop: 'user'}])
-        return HTTP.get(spec.url)
-        .then((result)=>{spec.value = result; return spec}) // we want to keep the url in the value resolved by the promise here. spec = {url: '/api/me', value: {name: 'Guillaume'}, prop: 'user'}
-      })
-    )
+    // all remoteProps can be queried in parallel
+    const promise_mapper = (spec) => {
+      // we want to keep the url in the value resolved by the promise here. spec = {url: '/api/me', value: {name: 'Guillaume'}, prop: 'user'}
+      return HTTP.get(spec.url).then((res) => { spec.value = res; return spec })
+    }
 
-    When.reduce(promise, (acc, spec)=>{ // {url: '/api/me', value: {name: 'Guillaume'}, prop: 'user'}
+    const reducer = (acc, spec) => {
+      // spec = url: '/api/me', value: {name: 'Guillaume'}, prop: 'user'}
       acc[spec.prop] = {url: spec.url, value: spec.value}
       return acc
-    }, props).then((newProps)=>{
-      addRemoteProps(newProps).then(resolve, reject)
+    }
+
+    const promise_array = remoteProps.map(promise_mapper)
+    return Promise.all(promise_array)
+    .then(xs => xs.reduce(reducer, props), reject)
+    .then((p) => {
+      // recursively call remote props, because props computed from
+      // previous queries can give the missing data/props necessary
+      // to define another query
+      return addRemoteProps(p).then(resolve, reject)
     }, reject)
   })
 }
@@ -185,10 +193,10 @@ var Layout = createReactClass({
       <this.props.Child {...props}/>
       </Z>
       <Z sel=".modal-wrapper" className={cn(classNameZ, {'hidden': !modal_component})}>
-        {modal_component}
+      {modal_component}
       </Z>
       <Z sel=".loader-wrapper" className={cn(classNameZ, {'hidden': !loader_component})}>
-        {loader_component}
+      {loader_component}
       </Z>
       </JSXZ>
     }
@@ -221,7 +229,7 @@ var Orders = createReactClass({
   render(){
     var new_orders = this.props.orders.value
     var i = 0
-    function handle_delete(id, props) {
+    function delete_order(id, props) {
       var data = {
         order: "nat_order" + id
       };
@@ -248,7 +256,7 @@ var Orders = createReactClass({
       <Z sel=".col-3">{order.custom.billing_address.street[0]}, {order.custom.billing_address.postcode} {order.custom.billing_address.city}</Z>
       <Z sel=".col-4">{order.custom.items.length}</Z>
       <Z sel=".col-5" onClick={(e) => GoTo("order", order.remoteid, "")}></Z>
-      <Z sel=".col-6" onClick={(e) => handle_delete(order.remoteid, this.props)}></Z>
+      <Z sel=".col-6" onClick={(e) => delete_order(order.remoteid, this.props)}></Z>
       </JSXZ>))
     }
     </Z>
@@ -348,7 +356,7 @@ function onPathChange() {
     }, (res) => {
       ReactDOM.render(<ErrorPage message={"Shit happened"} code={404}/>, document.getElementById('root'))
     })
-}
+  }
 
-window.addEventListener("popstate", ()=>{ onPathChange() })
-onPathChange()
+  window.addEventListener("popstate", ()=>{ onPathChange() })
+  onPathChange()

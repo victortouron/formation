@@ -11082,20 +11082,28 @@ function addRemoteProps(props) {
     }); // get rid of remoteProps already resolved with the url
     if (remoteProps.length == 0) return resolve(props);
     // check out https://github.com/cujojs/when/blob/master/docs/api.md#whenmap and https://github.com/cujojs/when/blob/master/docs/api.md#whenreduce
-    var promise = When.map( // Returns a Promise that either on a list of resolved remoteProps, or on the rejected value by the first fetch who failed
-    remoteProps.map(function (spec) {
-      // Returns a list of Promises that resolve on list of resolved remoteProps ([{url: '/api/me', value: {name: 'Guillaume'}, prop: 'user'}])
-      return HTTP.get(spec.url).then(function (result) {
-        spec.value = result;return spec;
-      }); // we want to keep the url in the value resolved by the promise here. spec = {url: '/api/me', value: {name: 'Guillaume'}, prop: 'user'}
-    }));
+    // all remoteProps can be queried in parallel
+    var promise_mapper = function promise_mapper(spec) {
+      // we want to keep the url in the value resolved by the promise here. spec = {url: '/api/me', value: {name: 'Guillaume'}, prop: 'user'}
+      return HTTP.get(spec.url).then(function (res) {
+        spec.value = res;return spec;
+      });
+    };
 
-    When.reduce(promise, function (acc, spec) {
-      // {url: '/api/me', value: {name: 'Guillaume'}, prop: 'user'}
+    var reducer = function reducer(acc, spec) {
+      // spec = url: '/api/me', value: {name: 'Guillaume'}, prop: 'user'}
       acc[spec.prop] = { url: spec.url, value: spec.value };
       return acc;
-    }, props).then(function (newProps) {
-      addRemoteProps(newProps).then(resolve, reject);
+    };
+
+    var promise_array = remoteProps.map(promise_mapper);
+    return Promise.all(promise_array).then(function (xs) {
+      return xs.reduce(reducer, props);
+    }, reject).then(function (p) {
+      // recursively call remote props, because props computed from
+      // previous queries can give the missing data/props necessary
+      // to define another query
+      return addRemoteProps(p).then(resolve, reject);
     }, reject);
   });
 }
@@ -11660,7 +11668,7 @@ var Orders = createReactClass({
 
     var new_orders = this.props.orders.value;
     var i = 0;
-    function handle_delete(id, props) {
+    function delete_order(id, props) {
       var data = {
         order: "nat_order" + id
       };
@@ -11805,7 +11813,7 @@ var Orders = createReactClass({
                 'div',
                 {
                   className: 'col-5',
-                  'class': 'button', onClick: function onClick(e) {
+                  onClick: function onClick(e) {
                     return GoTo("order", order.remoteid, "");
                   } },
                 '\uF06E'
@@ -11815,7 +11823,7 @@ var Orders = createReactClass({
                 {
                   className: 'col-6',
                   onClick: function onClick(e) {
-                    return handle_delete(order.remoteid, _this5.props);
+                    return delete_order(order.remoteid, _this5.props);
                   } },
                 '\uF2ED'
               )
