@@ -25,3 +25,7 @@
 #
 # IO.inspect Server.Database.read(:json, "nat_order000147785")
 # IO.inspect Server.Database.search(db, [{"order_number", "000147785"}])
+# {:ok,{{_,200, message},headers,body}} = :httpc.request(:get,{'#{Riak.url}/buckets?buckets=true', Riak.auth_header()},[],[])
+# IO.inspect message
+# IO.inspect headers
+# IO.inspect body
