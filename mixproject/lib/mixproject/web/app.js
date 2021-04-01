@@ -86,13 +86,11 @@ function addRemoteProps(props){
       // we want to keep the url in the value resolved by the promise here. spec = {url: '/api/me', value: {name: 'Guillaume'}, prop: 'user'}
       return HTTP.get(spec.url).then((res) => { spec.value = res; return spec })
     }
-
     const reducer = (acc, spec) => {
       // spec = url: '/api/me', value: {name: 'Guillaume'}, prop: 'user'}
       acc[spec.prop] = {url: spec.url, value: spec.value}
       return acc
     }
-
     const promise_array = remoteProps.map(promise_mapper)
     return Promise.all(promise_array)
     .then(xs => xs.reduce(reducer, props), reject)
@@ -104,7 +102,6 @@ function addRemoteProps(props){
     }, reject)
   })
 }
-
 
 var ErrorPage = createReactClass({
   render(){
@@ -171,23 +168,12 @@ var Layout = createReactClass({
     var props = {
       ...this.props, modal: this.modal, loader: this.loader
     }
-
     var modal_component = {
       'delete': (props) => <DeleteModal {...props}/>
     }[this.state.modal && this.state.modal.type];
     modal_component = modal_component && modal_component(this.state.modal)
-
     var loader_component = this.state.loader && (() => <Loader />)
     loader_component = loader_component && loader_component(this.state.loader)
-
-    if (this.props.route == "order") {
-      return <JSXZ in="order" sel=".layout">
-      <Z sel=".layout-container">
-      <this.props.Child {...this.props}/>
-      </Z>
-      </JSXZ>
-    }
-    else if (this.props.route == "orders") {
       return <JSXZ in="orders" sel=".layout">
       <Z sel=".layout-container">
       <this.props.Child {...props}/>
@@ -199,26 +185,16 @@ var Layout = createReactClass({
       {loader_component}
       </Z>
       </JSXZ>
-    }
   }
 })
 
 var Header = createReactClass({
   render(){
-    if (this.props.route == "order") {
-      return <JSXZ in="order" sel=".header">
-      <Z sel=".header-container">
-      <this.props.Child {...this.props}/>
-      </Z>
-      </JSXZ>
-    }
-    else if (this.props.route == "orders") {
       return <JSXZ in="orders" sel=".header">
       <Z sel=".header-container">
       <this.props.Child {...this.props}/>
       </Z>
       </JSXZ>
-    }
   }
 })
 
@@ -243,7 +219,6 @@ var Orders = createReactClass({
           props.loader(HTTP.post("/api/delete", data).then(res => {
             window.location.reload();
           }));
-          //Do something with the return value
         }
       })
     }
