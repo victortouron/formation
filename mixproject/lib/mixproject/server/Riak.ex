@@ -7,24 +7,54 @@ defmodule Riak do
     auth = :base64.encode_to_string("#{username}:#{password}")
     [{'authorization', 'Basic #{auth}'}]
   end
-  
   def get_buckets do
-    {:ok,{{_,200, message},headers,body}} = :httpc.request(:get,{'#{Riak.url}/buckets?buckets=true', Riak.auth_header()},[],[])
+    {_res,{{_,200, _message},_headers,body}} = :httpc.request(:get,{'#{Riak.url}/buckets?buckets=true', Riak.auth_header()},[],[])
     body
   end
   def get_key(bucket) do
-    {:ok,{{_,200, message},headers,body}} = :httpc.request(:get,{'#{Riak.url}/buckets/#{bucket}/keys?keys=true', Riak.auth_header()},[],[])
+    {_res,{{_,200, _message},_headers,body}} = :httpc.request(:get,{'#{Riak.url}/buckets/#{bucket}/keys?keys=true', Riak.auth_header()},[],[])
     body
   end
   def get_object(bucket, key) do
-    {:ok,{{_,200, message},headers,body}} = :httpc.request(:get,{'#{Riak.url}/buckets/#{bucket}/keys/#{key}', Riak.auth_header()},[],[])
+    {_res,{{_,200, _message},_headers,body}} = :httpc.request(:get,{'#{Riak.url}/buckets/#{bucket}/keys/#{key}', Riak.auth_header()},[],[])
+    body
+  end
+  def get_indexes() do
+    {_res,{{_,200, _message},_headers,body}} = :httpc.request(:get,{'#{Riak.url}/search/index', Riak.auth_header()},[],[])
     body
   end
   def put_object(bucket, key, object) do
     body = Poison.encode!(object)
-    {:ok, resp} = :httpc.request(:put,{'#{Riak.url}/buckets/#{bucket}/keys/#{key}', Riak.auth_header(), 'application/json', body},[],[])
+    {res,{{_,_code, _message},_headers,_body}} = :httpc.request(:put,{'#{Riak.url}/buckets/#{bucket}/keys/#{key}', Riak.auth_header(), 'application/json', body},[],[])
+    res
+  end
+  def put_schema(name) do
+    {:ok, schema} = File.read('/home/coachbombay/formation/mixproject/lib/riak/order_shema.xml')
+    {res,{{_,_code, _message},_headers,_body}} = :httpc.request(:put,{'#{Riak.url}/search/schema/#{name}', Riak.auth_header(), 'application/xml', schema},[],[])
   end
   def delete_object(bucket, key) do
-    {:ok, res} = :httpc.request(:delete,{'#{Riak.url}/buckets/#{bucket}/keys/#{key}', Riak.auth_header()},[],[])
+    {res,{{_,_code, _message},_headers,_body}} = :httpc.request(:delete,{'#{Riak.url}/buckets/#{bucket}/keys/#{key}', Riak.auth_header()},[],[])
+    res
+  end
+  def delete_bucket(bucket) do
+    {res,{{_,_code, _message},_headers,_body}} = :httpc.request(:delete,{'#{Riak.url}/buckets/#{bucket}/props', Riak.auth_header()},[],[])
+  end
+  def create_index(name, schema) do
+    map = %{"schema": "#{schema}"}
+    json = Poison.encode!(map)
+    {res,{{_,_code, _message},_headers,_body}} = :httpc.request(:put,{'#{Riak.url}/search/index/#{name}', Riak.auth_header(), 'application/json', json},[],[])
+  end
+  def empty_bucket(bucket) do
+    keys = get_key(bucket)
+    map = Poison.decode!(keys)
+    orders = Map.get(map, "keys")
+    Enum.map(orders, fn order ->
+      delete_object(bucket, order)
+    end)
+  end
+  def assign_index_to_bucket(bucket, index) do
+    map = %{"props": %{"search_index": "#{index}"}}
+    json = Poison.encode!(map)
+    {res,{{_,_code, _message},_headers,_body}} = :httpc.request(:put,{'#{Riak.url}/buckets/#{bucket}/props', Riak.auth_header(), 'application/json', json},[],[])
   end
 end
