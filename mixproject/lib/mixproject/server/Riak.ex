@@ -57,4 +57,8 @@ defmodule Riak do
     json = Poison.encode!(map)
     {res,{{_,_code, _message},_headers,_body}} = :httpc.request(:put,{'#{Riak.url}/buckets/#{bucket}/props', Riak.auth_header(), 'application/json', json},[],[])
   end
+  def search(index, query, page \\ 0, rows \\ 30, sort \\ "creation_date_index") do
+    {res,{{_,_code, _message},_headers,_body}} = :httpc.request(:get,{'https://kbrw-sb-tutoex-riak-gateway.kbrw.fr/search/query/vtouron_orders_index/?wt=json&q=type:%22nat_order%22', Riak.auth_header()},[],[])
+  end
+
 end
