@@ -58,6 +58,7 @@ defmodule Server.Database do
     :ets.new(db, [:named_table, :public])
     IO.puts "Loading JSON into DB"
     JsonLoader.load_to_database(db, "/home/coachbombay/formation/mixproject/orders_dump/orders_chunk0.json")
+    # JsonLoader.load_to_Riak("/home/coachbombay/formation/mixproject/orders_dump/orders_chunk0.json")
     IO.puts "JSON Loaded Succes"
     {:ok, :ok}
   end
