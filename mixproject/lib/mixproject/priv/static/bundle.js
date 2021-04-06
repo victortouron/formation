@@ -11305,7 +11305,11 @@ var Orders = createReactClass({
   render: function render() {
     var _this5 = this;
 
-    var new_orders = this.props.orders.value;
+    var new_orders = this.props.orders.value.response.docs;
+    console.log(new_orders);
+    new_orders.map(function (order) {
+      return console.log(order.custom.customer.email);
+    });
     var i = 0;
     function delete_order(id, props) {
       var data = {
@@ -11576,32 +11580,28 @@ var Orders = createReactClass({
                 {
                   className: 'col-1'
                 },
-                order.remoteid
+                order.id
               ),
               React.createElement(
                 'div',
                 {
                   className: 'col-2'
                 },
-                order.custom.customer.full_name
+                order.full_name
               ),
               React.createElement(
                 'div',
                 {
                   className: 'col-3'
                 },
-                order.custom.billing_address.street[0],
-                ', ',
-                order.custom.billing_address.postcode,
-                ' ',
-                order.custom.billing_address.city
+                'TOTO'
               ),
               React.createElement(
                 'div',
                 {
                   className: 'col-4'
                 },
-                order.custom.items.length
+                '42'
               ),
               React.createElement(
                 'div',

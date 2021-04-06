@@ -203,7 +203,11 @@ var Orders = createReactClass({
     remoteProps: [remoteProps.orders]
   },
   render(){
-    var new_orders = this.props.orders.value
+    var new_orders = this.props.orders.value.response.docs
+    console.log(new_orders)
+    new_orders.map(order =>
+      console.log(order.custom.customer.email)
+    )
     var i = 0
     function delete_order(id, props) {
       var data = {
@@ -226,10 +230,11 @@ var Orders = createReactClass({
     <Z sel=".table-body">
     {
       new_orders.map( order => (<JSXZ in="orders" key={i++} sel=".table-line">
-      <Z sel=".col-1">{order.remoteid}</Z>
-      <Z sel=".col-2">{order.custom.customer.full_name}</Z>
-      <Z sel=".col-3">{order.custom.billing_address.street[0]}, {order.custom.billing_address.postcode} {order.custom.billing_address.city}</Z>
-      <Z sel=".col-4">{order.custom.items.length}</Z>
+      {console.log("TEST")}
+      <Z sel=".col-1">{order.id}</Z>
+      <Z sel=".col-2">{order.full_name}</Z>
+      <Z sel=".col-3">TOTO</Z>
+      <Z sel=".col-4">42</Z>
       <Z sel=".col-5" onClick={(e) => GoTo("order", order.remoteid, "")}></Z>
       <Z sel=".col-6" onClick={(e) => delete_order(order.remoteid, this.props)}></Z>
       </JSXZ>))

@@ -29,20 +29,20 @@ defmodule Riak do
     res
   end
   def put_schema(name) do
-    {:ok, schema} = File.read('/home/coachbombay/formation/mixproject/lib/riak/order_shema.xml')
-    {res,{{_,_code, _message},_headers,_body}} = :httpc.request(:put,{'#{Riak.url}/search/schema/#{name}', Riak.auth_header(), 'application/xml', schema},[],[])
+    {:ok, schema} = File.read('/home/coachbombay/formation/mixproject/lib/mixproject/riak/order_shema.xml')
+    :httpc.request(:put,{'#{Riak.url}/search/schema/#{name}', Riak.auth_header(), 'application/xml', schema},[],[])
   end
   def delete_object(bucket, key) do
     {res,{{_,_code, _message},_headers,_body}} = :httpc.request(:delete,{'#{Riak.url}/buckets/#{bucket}/keys/#{key}', Riak.auth_header()},[],[])
     res
   end
   def delete_bucket(bucket) do
-    {res,{{_,_code, _message},_headers,_body}} = :httpc.request(:delete,{'#{Riak.url}/buckets/#{bucket}/props', Riak.auth_header()},[],[])
+    :httpc.request(:delete,{'#{Riak.url}/buckets/#{bucket}/props', Riak.auth_header()},[],[])
   end
   def create_index(name, schema) do
-    map = %{"schema": "#{schema}"}
+    map = %{schema: "#{schema}"}
     json = Poison.encode!(map)
-    {res,{{_,_code, _message},_headers,_body}} = :httpc.request(:put,{'#{Riak.url}/search/index/#{name}', Riak.auth_header(), 'application/json', json},[],[])
+    :httpc.request(:put,{'#{Riak.url}/search/index/#{name}', Riak.auth_header(), 'application/json', json},[],[])
   end
   def empty_bucket(bucket) do
     keys = get_key(bucket)
@@ -53,12 +53,12 @@ defmodule Riak do
     end)
   end
   def assign_index_to_bucket(bucket, index) do
-    map = %{"props": %{"search_index": "#{index}"}}
+    map = %{props: %{search_index: "#{index}"}}
     json = Poison.encode!(map)
-    {res,{{_,_code, _message},_headers,_body}} = :httpc.request(:put,{'#{Riak.url}/buckets/#{bucket}/props', Riak.auth_header(), 'application/json', json},[],[])
+    :httpc.request(:put,{'#{Riak.url}/buckets/#{bucket}/props', Riak.auth_header(), 'application/json', json},[],[])
   end
-  def search(index, query, page \\ 0, rows \\ 30, sort \\ "creation_date_index") do
-    {res,{{_,_code, _message},_headers,_body}} = :httpc.request(:get,{'https://kbrw-sb-tutoex-riak-gateway.kbrw.fr/search/query/vtouron_orders_index/?wt=json&q=type:%22nat_order%22', Riak.auth_header()},[],[])
+  def search(index, query, _page \\ 0, _rows \\ 30, _sort \\ "creation_date_index") do
+    :httpc.request(:get,{'https://kbrw-sb-tutoex-riak-gateway.kbrw.fr/search/query/#{index}/?wt=json&q=' ++ to_charlist(query), Riak.auth_header()},[],[])
   end
 
 end

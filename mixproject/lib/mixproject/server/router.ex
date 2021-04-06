@@ -46,9 +46,12 @@ defmodule Server.Router do
     check_is_nil(reply, conn)
   end
 
+
+
   get "/api/orders" do
-    json = Poison.encode!(Enum.map(Server.Database.get_table(), fn {_key, map} -> map end))
-    send_resp(conn, 200, json)
+    # json = Poison.encode!(Enum.map(Server.Database.get_table(), fn {_key, map} -> map end))
+    {_res,{{_,_code, _message},_headers,body}} = Riak.search("vtouron_orders_index", "type:nat_order")
+    send_resp(conn, 200, body)
   end
 
   get "/api/order/:order_id" do
