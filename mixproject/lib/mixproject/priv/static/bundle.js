@@ -11296,6 +11296,23 @@ var Header = createReactClass({
   }
 });
 
+function handleClick() {
+  var intput_text = document.getElementById("search_text").value;
+  console.log(intput_text);
+  HTTP.get("/api/vtouron_orders_index?" + intput_text).then(function (res) {
+    console.log(res);
+  });
+}
+
+// var button = document.getElementById("search_button");
+// console.dir(button);
+// button.addEventListener('click', (event) => {
+//   console.dir(event);
+//   event.preventDefault();
+//    showMailingPopUp(); /* run showMailingPopUp function */
+// });
+
+
 var Orders = createReactClass({
   displayName: 'Orders',
 
@@ -11306,10 +11323,6 @@ var Orders = createReactClass({
     var _this5 = this;
 
     var new_orders = this.props.orders.value.response.docs;
-    console.log(new_orders);
-    new_orders.map(function (order) {
-      return console.log(order.custom.customer.email);
-    });
     var i = 0;
     function delete_order(id, props) {
       var data = {
@@ -11391,41 +11404,21 @@ var Orders = createReactClass({
               ),
               React.createElement('input', {
                 type: 'text',
+                id: 'search_text',
                 className: 'text-field-3 w-input',
                 maxLength: 256,
                 name: 'name',
                 'data-name': 'Name',
-                placeholder: '',
-                id: 'name'
+                placeholder: ''
               }),
               React.createElement('input', {
-                type: 'submit',
+                type: 'button',
                 defaultValue: 'Submit',
                 'data-wait': 'Please wait...',
-                className: 'submit-button-3 w-button'
-              })
-            ),
-            React.createElement(
-              'div',
-              {
-                className: 'w-form-done'
-              },
-              React.createElement(
-                'div',
-                null,
-                'Thank you! Your submission has been received!'
-              )
-            ),
-            React.createElement(
-              'div',
-              {
-                className: 'w-form-fail'
-              },
-              React.createElement(
-                'div',
-                null,
-                'Oops! Something went wrong while submitting the form.'
-              )
+                className: 'submit-button-3 w-button',
+                onClick: function onClick(e) {
+                  return handleClick();
+                } })
             )
           )
         ),
@@ -11580,28 +11573,32 @@ var Orders = createReactClass({
                 {
                   className: 'col-1'
                 },
-                order.id
+                order.remoteid
               ),
               React.createElement(
                 'div',
                 {
                   className: 'col-2'
                 },
-                order.full_name
+                order["custom.customer.full_name"]
               ),
               React.createElement(
                 'div',
                 {
                   className: 'col-3'
                 },
-                'TOTO'
+                order["custom.shipping_address.street"],
+                ', ',
+                order["custom.shipping_address.postcode"],
+                ' ',
+                order["custom.shipping_address.city"]
               ),
               React.createElement(
                 'div',
                 {
                   className: 'col-4'
                 },
-                '42'
+                order["custom.items.quantity_to_fetch"].length
               ),
               React.createElement(
                 'div',
@@ -11689,8 +11686,9 @@ var Order = createReactClass({
     remoteProps: [remoteProps.order]
   },
   render: function render() {
-    var new_orders = this.props.order.value.custom.items;
-    var i = 0;
+    var order = this.props.order.value.response.docs[0];
+    var items = order["custom.items.product_title"];
+    var i = -1;
     return React.createElement(
       'div',
       {
@@ -11805,7 +11803,7 @@ var Order = createReactClass({
             {
               className: 'detail-col-2 name_val'
             },
-            this.props.order.value.custom.customer.full_name
+            order["custom.customer.full_name"]
           )
         ),
         React.createElement(
@@ -11829,11 +11827,11 @@ var Order = createReactClass({
             {
               className: 'detail-col-2 add_val'
             },
-            this.props.order.value.custom.shipping_address.street[0],
+            order["custom.shipping_address.street"],
             ', ',
-            this.props.order.value.custom.shipping_address.postcode,
+            order["custom.shipping_address.postcode"],
             ' ',
-            this.props.order.value.custom.shipping_address.city
+            order["custom.shipping_address.city"]
           )
         ),
         React.createElement(
@@ -11857,7 +11855,7 @@ var Order = createReactClass({
             {
               className: 'detail-col-2 comm_val'
             },
-            this.props.order.value.custom.order_number
+            order.remoteid
           )
         )
       ),
@@ -11921,7 +11919,7 @@ var Order = createReactClass({
           {
             className: 'table-body'
           },
-          new_orders.map(function (order) {
+          items.map(function (item) {
             return React.createElement(
               'div',
               {
@@ -11932,28 +11930,28 @@ var Order = createReactClass({
                 {
                   className: 'col-1'
                 },
-                order.product_title
+                item
               ),
               React.createElement(
                 'div',
                 {
                   className: 'col-2'
                 },
-                order.quantity_to_fetch
+                order["custom.items.quantity_to_fetch"][i]
               ),
               React.createElement(
                 'div',
                 {
                   className: 'col-3'
                 },
-                order.unit_price
+                order["custom.items.unit_price"][i]
               ),
               React.createElement(
                 'div',
                 {
                   className: 'col-4'
                 },
-                order.quantity_to_fetch * order.unit_price
+                order["custom.items.quantity_to_fetch"][i] * order["custom.items.unit_price"][i]
               )
             );
           })

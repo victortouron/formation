@@ -39,32 +39,30 @@ defmodule Server.Router do
     check_is_nil(reply, conn)
   end
 
-  get "/search" do
-    %{"id" => id, "value"=> key} = Plug.Conn.Query.decode(conn.query_string)
-    reply = Server.Database.search(:json, [{id, key}])
-    # [{order_name, map}] = reply
-    check_is_nil(reply, conn)
+  get "/api/vtouron_orders_index" do
+    qs =  conn.query_string
+    query = String.replace(qs, "=", ":")
+    {_res,{{_,_code, _message},_headers,body}} = Riak.search("vtouron_orders_index", query)
+    send_resp(conn, 200, body)
   end
 
-
-
   get "/api/orders" do
-    # json = Poison.encode!(Enum.map(Server.Database.get_table(), fn {_key, map} -> map end))
     {_res,{{_,_code, _message},_headers,body}} = Riak.search("vtouron_orders_index", "type:nat_order")
     send_resp(conn, 200, body)
   end
 
   get "/api/order/:order_id" do
-    [{_id, map}] = Server.Database.read(:json, "nat_order" <> order_id)
-    send_resp(conn, 200, Poison.encode!(map))
+    IO.inspect "id:nat_order" <> order_id
+    {_res,{{_,_code, _message},_headers,body}} = Riak.search("vtouron_orders_index", "id:nat_order" <> order_id)
+    send_resp(conn, 200, body)
   end
 
   post "/api/delete" do
     {:ok, data, _conn} = read_body(conn)
     {:ok, res} = Poison.decode(data)
     {_key, value} = List.first(Map.to_list(res))
-    Server.Database.delete(:json, value)
     body = Poison.encode!("Delete")
+    Riak.delete_object("vtouron_orders", value)
     :timer.sleep(2000)
     send_resp(conn, 200, body)
   end

@@ -29,7 +29,7 @@ defmodule Riak do
     res
   end
   def put_schema(name) do
-    {:ok, schema} = File.read('/home/coachbombay/formation/mixproject/lib/mixproject/riak/order_shema.xml')
+    {:ok, schema} = File.read('/home/coachbombay/formation/mixproject/lib/mixproject/riak/order_shema0.xml')
     :httpc.request(:put,{'#{Riak.url}/search/schema/#{name}', Riak.auth_header(), 'application/xml', schema},[],[])
   end
   def delete_object(bucket, key) do
@@ -57,8 +57,8 @@ defmodule Riak do
     json = Poison.encode!(map)
     :httpc.request(:put,{'#{Riak.url}/buckets/#{bucket}/props', Riak.auth_header(), 'application/json', json},[],[])
   end
-  def search(index, query, _page \\ 0, _rows \\ 30, _sort \\ "creation_date_index") do
-    :httpc.request(:get,{'https://kbrw-sb-tutoex-riak-gateway.kbrw.fr/search/query/#{index}/?wt=json&q=' ++ to_charlist(query), Riak.auth_header()},[],[])
+  def search(index, query, _page \\ 0, rows \\ 30, sort \\ "creation_date_index") do
+    :httpc.request(:get,{'https://kbrw-sb-tutoex-riak-gateway.kbrw.fr/search/query/#{index}/?wt=json&sort=creation_date_index%20asc&rows=150&q=' ++ to_charlist(query), Riak.auth_header()},[],[])
   end
 
 end
