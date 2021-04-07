@@ -9,6 +9,7 @@ var Qs = require('qs')
 var Cookie = require('cookie')
 var XMLHttpRequest = require("xhr2")
 var When = require('when')
+var page = 1
 
 var HTTP = new (function(){
   this.get = (url)=>this.req('GET',url)
@@ -48,6 +49,8 @@ var remoteProps = {
     return*/
     var qs = {...props.qs}//, user_id: props.user.value.id}
     var query = Qs.stringify(qs)
+    if (query != "")
+      page = query.split('=')[1]
     return {
       url: "/api/orders" + (query == '' ? '' : '?' + query),
       prop: "orders"
@@ -58,7 +61,7 @@ var remoteProps = {
       url: "/api/order/" + props.order_id,
       prop: "order"
     }
-}
+}}
 
 function addRemoteProps(props){
   return new Promise((resolve, reject)=>{
@@ -205,6 +208,17 @@ function handleClick(){
   })
 }
 
+function nextpage(){
+  page ++
+  GoTo("orders", [], "page=" + page)
+}
+
+function previouspage(){
+  if (page > 1)
+    page --
+  GoTo("orders", [], "page=" + page)
+}
+
 var Orders = createReactClass({
   statics: {
     remoteProps: [remoteProps.orders]
@@ -243,6 +257,10 @@ var Orders = createReactClass({
       </JSXZ>))
     }
     </Z>
+    <Z sel=".previouspage" onClick={(e) => previouspage()}></Z>
+    <Z sel=".currentpage">{page}</Z>
+    <Z sel=".nextpage" onClick={(e) => nextpage()}></Z>
+
     </JSXZ>
   }
 })
@@ -304,7 +322,7 @@ var routes = {
 
 var GoTo = (route, params, query) => {
   var qs = Qs.stringify(query)
-  var url = routes[route].path(params) + ((qs=='') ? '' : ('?'+qs))
+  var url = routes[route].path(params) + ((query=='') ? '' : ('?'+query))
   history.pushState({}, "", url)
   onPathChange()
 }

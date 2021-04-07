@@ -47,8 +47,15 @@ defmodule Server.Router do
   end
 
   get "/api/orders" do
-    {_res,{{_,_code, _message},_headers,body}} = Riak.search("vtouron_orders_index", "type:nat_order")
-    send_resp(conn, 200, body)
+    if conn.query_string == "" do
+      page = 1
+      {_res,{{_,_code, _message},_headers,body}} = Riak.search("vtouron_orders_index", "type:nat_order", page)
+      send_resp(conn, 200, body)
+    else
+      %{"page" => page} = Plug.Conn.Query.decode(conn.query_string)
+      {_res,{{_,_code, _message},_headers,body}} = Riak.search("vtouron_orders_index", "type:nat_order", String.to_integer(page))
+      send_resp(conn, 200, body)
+    end
   end
 
   get "/api/order/:order_id" do

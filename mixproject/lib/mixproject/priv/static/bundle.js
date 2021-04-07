@@ -10992,6 +10992,7 @@ var Qs = __webpack_require__(197);
 var Cookie = __webpack_require__(201);
 var XMLHttpRequest = __webpack_require__(202);
 var When = __webpack_require__(203);
+var page = 1;
 
 var HTTP = new function () {
   var _this = this;
@@ -11043,6 +11044,7 @@ var remoteProps = {
     return*/
     var qs = _extends({}, props.qs); //, user_id: props.user.value.id}
     var query = Qs.stringify(qs);
+    if (query != "") page = query.split('=')[1];
     return {
       url: "/api/orders" + (query == '' ? '' : '?' + query),
       prop: "orders"
@@ -11053,8 +11055,7 @@ var remoteProps = {
       url: "/api/order/" + props.order_id,
       prop: "order"
     };
-  }
-};
+  } };
 
 function addRemoteProps(props) {
   return new Promise(function (resolve, reject) {
@@ -11304,14 +11305,15 @@ function handleClick() {
   });
 }
 
-// var button = document.getElementById("search_button");
-// console.dir(button);
-// button.addEventListener('click', (event) => {
-//   console.dir(event);
-//   event.preventDefault();
-//    showMailingPopUp(); /* run showMailingPopUp function */
-// });
+function nextpage() {
+  page++;
+  GoTo("orders", [], "page=" + page);
+}
 
+function previouspage() {
+  if (page > 1) page--;
+  GoTo("orders", [], "page=" + page);
+}
 
 var Orders = createReactClass({
   displayName: 'Orders',
@@ -11635,43 +11637,27 @@ var Orders = createReactClass({
           React.createElement(
             'div',
             {
-              className: 'firstpage'
-            },
-            '\uF04A'
-          ),
-          React.createElement(
-            'div',
-            {
-              className: 'previouspage'
-            },
-            React.createElement(
-              'span',
-              {
-                className: 'text-span-6'
-              },
-              '\uF060'
-            )
+              className: 'previouspage',
+              onClick: function onClick(e) {
+                return previouspage();
+              } },
+            '\uF060'
           ),
           React.createElement(
             'div',
             {
               className: 'currentpage'
             },
-            '1'
+            page
           ),
           React.createElement(
             'div',
             {
-              className: 'nextpage'
-            },
+              className: 'nextpage',
+              onClick: function onClick(e) {
+                return nextpage();
+              } },
             '\uF061'
-          ),
-          React.createElement(
-            'div',
-            {
-              className: 'lastpage'
-            },
-            '\uF04E'
           )
         )
       )
@@ -12028,7 +12014,7 @@ var routes = {
 
 var GoTo = function GoTo(route, params, query) {
   var qs = Qs.stringify(query);
-  var url = routes[route].path(params) + (qs == '' ? '' : '?' + qs);
+  var url = routes[route].path(params) + (query == '' ? '' : '?' + query);
   history.pushState({}, "", url);
   onPathChange();
 };
