@@ -3,7 +3,7 @@
   "warnings": [],
   "version": "3.12.0",
   "hash": "6dbde7deb5c15e6efeb7",
-  "time": 2553,
+  "time": 2629,
   "publicPath": "",
   "assetsByChunkName": {
     "main": [
@@ -89,9 +89,9 @@
             0
           ],
           "assets": [],
-          "issuer": "/home/coachbombay/formation/mixproject/web/node_modules/react/lib/React.js",
-          "issuerId": 20,
-          "issuerName": "./node_modules/react/lib/React.js",
+          "issuer": "/home/coachbombay/formation/mixproject/web/node_modules/react-dom/lib/ReactDOM.js",
+          "issuerId": 94,
+          "issuerName": "./node_modules/react-dom/lib/ReactDOM.js",
           "failed": false,
           "errors": 0,
           "warnings": 0,
@@ -865,9 +865,9 @@
             0
           ],
           "assets": [],
-          "issuer": "/home/coachbombay/formation/mixproject/web/node_modules/react/lib/ReactBaseClasses.js",
-          "issuerId": 67,
-          "issuerName": "./node_modules/react/lib/ReactBaseClasses.js",
+          "issuer": "/home/coachbombay/formation/mixproject/web/node_modules/react-dom/lib/ReactDOMComponentTree.js",
+          "issuerId": 5,
+          "issuerName": "./node_modules/react-dom/lib/ReactDOMComponentTree.js",
           "failed": false,
           "errors": 0,
           "warnings": 0,
@@ -2756,7 +2756,7 @@
               "moduleName": "./node_modules/react/lib/checkReactTypeSpec.js",
               "type": "cjs require",
               "userRequest": "./ReactComponentTreeHook",
-              "loc": "27:27-62"
+              "loc": "69:37-72"
             },
             {
               "moduleId": 141,
@@ -2765,7 +2765,7 @@
               "moduleName": "./node_modules/react/lib/checkReactTypeSpec.js",
               "type": "cjs require",
               "userRequest": "./ReactComponentTreeHook",
-              "loc": "69:37-72"
+              "loc": "27:27-62"
             },
             {
               "moduleId": 151,
@@ -12601,9 +12601,9 @@
         0
       ],
       "assets": [],
-      "issuer": "/home/coachbombay/formation/mixproject/web/node_modules/react/lib/React.js",
-      "issuerId": 20,
-      "issuerName": "./node_modules/react/lib/React.js",
+      "issuer": "/home/coachbombay/formation/mixproject/web/node_modules/react-dom/lib/ReactDOM.js",
+      "issuerId": 94,
+      "issuerName": "./node_modules/react-dom/lib/ReactDOM.js",
       "failed": false,
       "errors": 0,
       "warnings": 0,
@@ -13377,9 +13377,9 @@
         0
       ],
       "assets": [],
-      "issuer": "/home/coachbombay/formation/mixproject/web/node_modules/react/lib/ReactBaseClasses.js",
-      "issuerId": 67,
-      "issuerName": "./node_modules/react/lib/ReactBaseClasses.js",
+      "issuer": "/home/coachbombay/formation/mixproject/web/node_modules/react-dom/lib/ReactDOMComponentTree.js",
+      "issuerId": 5,
+      "issuerName": "./node_modules/react-dom/lib/ReactDOMComponentTree.js",
       "failed": false,
       "errors": 0,
       "warnings": 0,
@@ -15268,7 +15268,7 @@
           "moduleName": "./node_modules/react/lib/checkReactTypeSpec.js",
           "type": "cjs require",
           "userRequest": "./ReactComponentTreeHook",
-          "loc": "27:27-62"
+          "loc": "69:37-72"
         },
         {
           "moduleId": 141,
@@ -15277,7 +15277,7 @@
           "moduleName": "./node_modules/react/lib/checkReactTypeSpec.js",
           "type": "cjs require",
           "userRequest": "./ReactComponentTreeHook",
-          "loc": "69:37-72"
+          "loc": "27:27-62"
         },
         {
           "moduleId": 151,
