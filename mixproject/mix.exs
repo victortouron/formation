@@ -7,14 +7,15 @@ defmodule Mixproject.MixProject do
       version: "0.1.0",
       elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      compilers: [:reaxt_webpack] ++ Mix.compilers
     ]
   end
 
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger, :cowboy, :inets, :ssl],
+      extra_applications: [:logger, :cowboy, :inets, :ssl, :reaxt],
       mod: {Mixproject.Application, []}
     ]
   end
@@ -22,6 +23,7 @@ defmodule Mixproject.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:reaxt, "~> 4.0.1", github: "kbrw/reaxt"},
       {:poison, "~> 4.0"},
       {:plug_cowboy, "~> 2.0"}
     ]

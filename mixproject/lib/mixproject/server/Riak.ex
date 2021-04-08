@@ -57,7 +57,7 @@ defmodule Riak do
     json = Poison.encode!(map)
     :httpc.request(:put,{'#{Riak.url}/buckets/#{bucket}/props', Riak.auth_header(), 'application/json', json},[],[])
   end
-  def search(index, query, page \\ 1, rows \\ 30, sort \\ "creation_date_index") do
+  def search(index, query, page \\ 1, rows \\ 30, _sort \\ "creation_date_index") do
     start = rows * (page - 1);
     :httpc.request(:get,{'https://kbrw-sb-tutoex-riak-gateway.kbrw.fr/search/query/#{index}/?wt=json&sort=creation_date_index%20asc&start=#{start}&page=#{page}&rows=#{rows}&q=' ++ to_charlist(query), Riak.auth_header()},[],[])
   end

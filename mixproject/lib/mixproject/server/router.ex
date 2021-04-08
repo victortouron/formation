@@ -1,7 +1,7 @@
 defmodule Server.Router do
   use Plug.Router
 
-  plug Plug.Static, from: "lib/mixproject/priv/static/", at: "/static"
+  plug Plug.Static, from: "/home/coachbombay/formation/mixproject/priv/static", at: "/static"
 
   plug :match
   plug :dispatch
@@ -74,6 +74,6 @@ defmodule Server.Router do
     send_resp(conn, 200, body)
   end
 
-  get _, do: send_file(conn, 200, "lib/mixproject/priv/static/index.html")
+  get _, do: send_file(conn, 200, "/home/coachbombay/formation/mixproject/priv/static/index.html")
 
 end
