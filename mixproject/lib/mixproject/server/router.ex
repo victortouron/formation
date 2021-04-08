@@ -1,10 +1,16 @@
 defmodule Server.Router do
   use Plug.Router
 
-  plug Plug.Static, from: "/home/coachbombay/formation/mixproject/priv/static", at: "/static"
+  # plug Plug.Static, from: "/home/coachbombay/formation/mixproject/priv/static", at: "/static"
+
+  plug Plug.Static, at: "/public", from: :mixproject
+
 
   plug :match
   plug :dispatch
+
+  require EEx
+  EEx.function_from_file :defp, :layout, "web/layout.html.eex", [:render]
 
   def check_is_nil(list, conn) do
     if List.first(list) != nil do
@@ -74,6 +80,11 @@ defmodule Server.Router do
     send_resp(conn, 200, body)
   end
 
-  get _, do: send_file(conn, 200, "/home/coachbombay/formation/mixproject/priv/static/index.html")
+  # get _, do: send_file(conn, 200, "/home/coachbombay/formation/mixproject/priv/static/index.html")
+  get _ do
+  conn = fetch_query_params(conn)
+  render = Reaxt.render!(:app, %{path: conn.request_path, cookies: conn.cookies, query: conn.params},30_000)
+  send_resp(put_resp_header(conn,"content-type","text/html;charset=utf-8"), render.param || 200,layout(render))
+  end
 
 end

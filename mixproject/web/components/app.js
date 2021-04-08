@@ -205,7 +205,7 @@ var Header = createReactClass({
 function handleClick(){
   const intput_text = document.getElementById("search_text").value;
   console.log(intput_text);
-  HTTP.get("/api/vtouron_orders_index?" + intput_text).then(res => {
+  HTTP.get("/api/vtouron_orders?" + intput_text).then(res => {
     console.log(res);
   })
 }
