@@ -6,6 +6,13 @@ defmodule Mixproject do
    # Although we don't use the supervisor name below directly,
    # it can be useful when debugging or introspecting the system.
    # Server.Supervisor.start_link()
+   Application.put_env(
+      :reaxt,:global_config,
+      Map.merge(
+        Application.get_env(:reaxt,:global_config), %{localhost: "http://localhost:4001"}
+      )
+    )
+    Reaxt.reload
  end
   @moduledoc """
   Documentation for `Mixproject`.
