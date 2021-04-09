@@ -244,11 +244,17 @@ var Header = createReactClass({
   }
 })
 
-function handleClick(){
+function handleClick(props){
   const intput_text = document.getElementById("search_text").value;
   console.log(intput_text);
-  HTTP.get("/api/vtouron_orders?" + intput_text).then(res => {
-    console.log(res);
+  HTTP.get("/api/vtouron_orders_index?" + intput_text).then(res => {
+
+    browserState.orders.value = res;
+    Link.onPathChange()
+    console.log(res)
+    // console.log(props)
+    // props.orders.value = res;
+    // ReactDOM.render(<Orders {...props}/>, document.getElementById('root'))
   })
 }
 
@@ -282,14 +288,16 @@ var Orders = createReactClass({
           console.log(value),
           console.log(data),
           props.loader(HTTP.post("/api/delete", data).then(res => {
-            console.log(res);
-            window.location.reload();
+            // console.log(res);
+            // window.location.reload();
+            delete browserState.orders
+            Link.onPathChange();
           }));
         }
       })
     }
     return <JSXZ in="orders" sel=".orders-container">
-    <Z sel=".submit-button-3" onClick={(e) => handleClick()}></Z>
+    <Z sel=".submit-button-3" onClick={(e) => handleClick(this.props)}></Z>
     <Z sel=".table-body">
     {
       new_orders.map( order => (<JSXZ in="orders" key={i++} sel=".table-line">

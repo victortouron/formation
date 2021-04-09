@@ -11131,11 +11131,17 @@ var Header = createReactClass({
   }
 });
 
-function handleClick() {
+function handleClick(props) {
   var intput_text = document.getElementById("search_text").value;
   console.log(intput_text);
-  HTTP.get("/api/vtouron_orders?" + intput_text).then(function (res) {
+  HTTP.get("/api/vtouron_orders_index?" + intput_text).then(function (res) {
+
+    browserState.orders.value = res;
+    Link.onPathChange();
     console.log(res);
+    // console.log(props)
+    // props.orders.value = res;
+    // ReactDOM.render(<Orders {...props}/>, document.getElementById('root'))
   });
 }
 
@@ -11170,8 +11176,10 @@ var Orders = createReactClass({
         message: 'Are you sure you want to delete this ?',
         callback: function callback(value) {
           console.log(value), console.log(data), props.loader(HTTP.post("/api/delete", data).then(function (res) {
-            console.log(res);
-            window.location.reload();
+            // console.log(res);
+            // window.location.reload();
+            delete browserState.orders;
+            Link.onPathChange();
           }));
         }
       });
@@ -11254,7 +11262,7 @@ var Orders = createReactClass({
                 'data-wait': 'Please wait...',
                 className: 'submit-button-3 w-button',
                 onClick: function onClick(e) {
-                  return handleClick();
+                  return handleClick(_this5.props);
                 } })
             )
           )
