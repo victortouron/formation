@@ -107,13 +107,15 @@ function addRemoteProps(props){
   })
 }
 
+
+
 var Link = createReactClass({
   statics: {
     renderFunc: null, //render function to use (differently set depending if we are server sided or client sided)
     GoTo(route, params, query){// function used to change the path of our browser
       var path = routes[route].path(params)
       var qs = Qs.stringify(query)
-      var url = path + (qs == '' ? '' : '?' + qs)
+      var url = path + (query == '' ? '' : '?' + query)
       history.pushState({},"",url)
       Link.onPathChange()
     },
@@ -252,13 +254,13 @@ function handleClick(){
 
 function nextpage(){
   page ++
-  GoTo("orders", [], "page=" + page)
+  Link.GoTo("orders", [], "page=" + page)
 }
 
 function previouspage(){
   if (page > 1)
     page --
-  GoTo("orders", [], "page=" + page)
+  Link.GoTo("orders", [], "page=" + page)
 }
 
 var Orders = createReactClass({
@@ -280,6 +282,7 @@ var Orders = createReactClass({
           console.log(value),
           console.log(data),
           props.loader(HTTP.post("/api/delete", data).then(res => {
+            console.log(res);
             window.location.reload();
           }));
         }
@@ -294,7 +297,7 @@ var Orders = createReactClass({
       <Z sel=".col-2">{order["custom.customer.full_name"]}</Z>
       <Z sel=".col-3">{order["custom.shipping_address.street"]}, {order["custom.shipping_address.postcode"]} {order["custom.shipping_address.city"]}</Z>
       <Z sel=".col-4">{order["custom.items.quantity_to_fetch"].length}</Z>
-      <Z sel=".col-5" onClick={(e) => GoTo("order", order.remoteid, "")}></Z>
+      <Z sel=".col-5" onClick={(e) => Link.GoTo("order", order.remoteid, "")}></Z>
       <Z sel=".col-6" onClick={(e) => delete_order(order.remoteid, this.props)}></Z>
       </JSXZ>))
     }
@@ -302,7 +305,6 @@ var Orders = createReactClass({
     <Z sel=".previouspage" onClick={(e) => previouspage()}></Z>
     <Z sel=".currentpage">{page}</Z>
     <Z sel=".nextpage" onClick={(e) => nextpage()}></Z>
-
     </JSXZ>
   }
 })
