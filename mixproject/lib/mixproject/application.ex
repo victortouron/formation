@@ -22,5 +22,12 @@ defmodule Mixproject.Application do
       name: Mixproject.Supervisor
     ]
     Supervisor.start_link(children, opts)
+    Application.put_env(
+       :reaxt,:global_config,
+       Map.merge(
+         Application.get_env(:reaxt,:global_config), %{localhost: "http://localhost:4001"}
+       )
+     )
+     Reaxt.reload
   end
 end
