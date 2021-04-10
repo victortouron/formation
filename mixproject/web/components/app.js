@@ -264,6 +264,10 @@ function previouspage(){
   Link.GoTo("orders", [], "page=" + page)
 }
 
+function pay_order(){
+  alert("PAY")
+}
+
 var Orders = createReactClass({
   statics: {
     remoteProps: [remoteProps.orders]
@@ -298,8 +302,10 @@ var Orders = createReactClass({
       <Z sel=".col-2">{order["custom.customer.full_name"]}</Z>
       <Z sel=".col-3">{order["custom.shipping_address.street"]}, {order["custom.shipping_address.postcode"]} {order["custom.shipping_address.city"]}</Z>
       <Z sel=".col-4">{order["custom.items.quantity_to_fetch"].length}</Z>
-      <Z sel=".col-5" onClick={(e) => Link.GoTo("order", order.remoteid, "")}></Z>
-      <Z sel=".col-6" onClick={(e) => delete_order(order.remoteid, this.props)}></Z>
+      <Z sel=".col-5">{order["status.state"]}</Z>
+      <Z sel=".col-6" onClick={(e) => Link.GoTo("order", order.remoteid, "")}><ChildrenZ /></Z>
+      <Z sel=".col-7" onClick={(e) => delete_order(order.remoteid, this.props)}><ChildrenZ /></Z>
+      <Z sel=".col-8" onClick={(e) => pay_order()}><ChildrenZ /></Z>
       </JSXZ>))
     }
     </Z>

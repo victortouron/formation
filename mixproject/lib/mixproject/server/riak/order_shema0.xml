@@ -17,6 +17,7 @@
 <field name="custom.items.product_title" type="string" indexed="true" stored="true" multiValued="true"/>
 <field name="custom.items.quantity_to_fetch" type="string" indexed="true" stored="true" multiValued="true"/>
 <field name="custom.items.unit_price" type="string" indexed="true" stored="true" multiValued="true"/>
+<field name="status.state" type="string" indexed="true" stored="true" multiValued="true"/>
 <field name="type" type="string" indexed="true" stored="true" multiValued="true"/>
 <dynamicField name="*" type="ignored"/>
 <field name="_yz_id" type="_yz_str" indexed="true" stored="true" multiValued="false" required="true"/>

@@ -25,7 +25,9 @@ defmodule Mixproject.MixProject do
     [
       {:reaxt, "~> 2.1.0", github: "kbrw/reaxt", tag: "2.1.0"},
       {:poison, "~> 2.1.0"},
-      {:plug_cowboy, "~> 1.0"}
+      {:plug_cowboy, "~> 1.0"},
+      {:rulex, git: "https://github.com/kbrw/rulex.git"},
+      {:exfsm, git: "https://github.com/kbrw/exfsm.git"}
     ]
   end
 end

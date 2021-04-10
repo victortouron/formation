@@ -11150,6 +11150,10 @@ function previouspage() {
   Link.GoTo("orders", [], "page=" + page);
 }
 
+function pay_order() {
+  alert("PAY");
+}
+
 var Orders = createReactClass({
   displayName: 'Orders',
 
@@ -11257,6 +11261,28 @@ var Orders = createReactClass({
                 onClick: function onClick(e) {
                   return handleClick(_this5.props);
                 } })
+            ),
+            React.createElement(
+              'div',
+              {
+                className: 'w-form-done'
+              },
+              React.createElement(
+                'div',
+                null,
+                'Thank you! Your submission has been received!'
+              )
+            ),
+            React.createElement(
+              'div',
+              {
+                className: 'w-form-fail'
+              },
+              React.createElement(
+                'div',
+                null,
+                'Oops! Something went wrong while submitting the form.'
+              )
             )
           )
         ),
@@ -11380,7 +11406,7 @@ var Orders = createReactClass({
             React.createElement(
               'div',
               null,
-              'Details'
+              'Status'
             )
           ),
           React.createElement(
@@ -11391,7 +11417,33 @@ var Orders = createReactClass({
             React.createElement(
               'div',
               null,
+              'Detail'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'col-7'
+            },
+            React.createElement(
+              'div',
+              {
+                className: 'text-block-9'
+              },
               'Delete'
+            )
+          ),
+          React.createElement(
+            'div',
+            {
+              className: 'col-8'
+            },
+            React.createElement(
+              'div',
+              {
+                className: 'text-block-9'
+              },
+              'Pay'
             )
           )
         ),
@@ -11441,20 +11493,57 @@ var Orders = createReactClass({
               React.createElement(
                 'div',
                 {
-                  className: 'col-5',
-                  onClick: function onClick(e) {
-                    return Link.GoTo("order", order.remoteid, "");
-                  } },
-                '\uF06E'
+                  className: 'col-5'
+                },
+                order["status.state"]
               ),
               React.createElement(
                 'div',
                 {
                   className: 'col-6',
                   onClick: function onClick(e) {
+                    return Link.GoTo("order", order.remoteid, "");
+                  } },
+                React.createElement(
+                  'a',
+                  {
+                    href: '#',
+                    className: 'button w-button'
+                  },
+                  '\uF06E'
+                )
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'col-7',
+                  onClick: function onClick(e) {
                     return delete_order(order.remoteid, _this5.props);
                   } },
-                '\uF2ED'
+                React.createElement(
+                  'a',
+                  {
+                    href: '#',
+                    className: 'button w-button'
+                  },
+                  '\uF2ED'
+                )
+              ),
+              React.createElement(
+                'div',
+                {
+                  className: 'col-8',
+                  onClick: function onClick(e) {
+                    return pay_order();
+                  } },
+                React.createElement(
+                  'a',
+                  {
+                    href: '#',
+                    className: 'button w-button'
+                  },
+                  '\uF155'
+                )
               )
             );
           })

@@ -64,7 +64,6 @@ defmodule Server.Router do
   end
 
   get "/api/order/:order_id" do
-    IO.inspect "id:nat_order" <> order_id
     {_res,{{_,_code, _message},_headers,body}} = Riak.search("vtouron_orders_index", "id:nat_order" <> order_id)
     send_resp(conn, 200, body)
   end

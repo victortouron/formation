@@ -1,4 +1,4 @@
-defmodule Riak do
+ defmodule Riak do
   def url, do: "https://kbrw-sb-tutoex-riak-gateway.kbrw.fr"
 
   def auth_header do
@@ -29,7 +29,7 @@ defmodule Riak do
     res
   end
   def put_schema(name) do
-    {:ok, schema} = File.read('/home/coachbombay/formation/mixproject/lib/mixproject/riak/order_shema0.xml')
+    {:ok, schema} = File.read('/home/coachbombay/formation/mixproject/lib/mixproject/server/riak/order_shema0.xml')
     :httpc.request(:put,{'#{Riak.url}/search/schema/#{name}', Riak.auth_header(), 'application/xml', schema},[],[])
   end
   def delete_object(bucket, key) do
@@ -61,5 +61,16 @@ defmodule Riak do
     start = rows * (page - 1);
     :httpc.request(:get,{'https://kbrw-sb-tutoex-riak-gateway.kbrw.fr/search/query/#{index}/?wt=json&sort=creation_date_index%20asc&start=#{start}&page=#{page}&rows=#{rows}&q=' ++ to_charlist(query), Riak.auth_header()},[],[])
   end
-
+  def initialize_commands(bucket) do
+    keys = get_key(bucket)
+    map = Poison.decode!(keys)
+    orders = Map.get(map, "keys")
+    Enum.map(orders, fn order ->
+      command = Poison.decode!(get_object("vtouron_orders", order))
+      status = Map.get(command, "status")
+      new_map = Map.replace(status, "state", "init")
+      final_map = Map.replace(command, "status", new_map)
+      Riak.put_object(bucket, order, final_map)
+    end)
+  end
 end
