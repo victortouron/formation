@@ -11150,10 +11150,6 @@ function previouspage() {
   Link.GoTo("orders", [], "page=" + page);
 }
 
-function pay_order() {
-  alert("PAY");
-}
-
 var Orders = createReactClass({
   displayName: 'Orders',
 
@@ -11175,6 +11171,22 @@ var Orders = createReactClass({
         message: 'Are you sure you want to delete this ?',
         callback: function callback(value) {
           console.log(value), console.log(data), props.loader(HTTP.post("/api/delete", data).then(function (res) {
+            delete browserState.orders;
+            Link.onPathChange();
+          }));
+        }
+      });
+    }
+    function pay_order(id, props) {
+      var data = {
+        order: "nat_order" + id
+      };
+      props.modal({
+        type: 'delete',
+        title: 'Order Payment',
+        message: 'Are you sure you want to pay this ?',
+        callback: function callback(value) {
+          console.log(value), console.log(data), props.loader(HTTP.get("/api/order/process_payment/" + id).then(function (res) {
             delete browserState.orders;
             Link.onPathChange();
           }));
@@ -11534,7 +11546,7 @@ var Orders = createReactClass({
                 {
                   className: 'col-8',
                   onClick: function onClick(e) {
-                    return pay_order();
+                    return pay_order(order.remoteid, _this5.props);
                   } },
                 React.createElement(
                   'a',

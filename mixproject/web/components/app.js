@@ -264,10 +264,6 @@ function previouspage(){
   Link.GoTo("orders", [], "page=" + page)
 }
 
-function pay_order(){
-  alert("PAY")
-}
-
 var Orders = createReactClass({
   statics: {
     remoteProps: [remoteProps.orders]
@@ -293,6 +289,24 @@ var Orders = createReactClass({
         }
       })
     }
+    function pay_order(id, props) {
+      var data = {
+        order: "nat_order" + id
+      };
+      props.modal({
+        type: 'delete',
+        title: 'Order Payment',
+        message: `Are you sure you want to pay this ?`,
+        callback: (value)=>{
+          console.log(value),
+          console.log(data),
+          props.loader(HTTP.get("/api/order/process_payment/" + id).then(res => {
+            delete browserState.orders
+            Link.onPathChange();
+          }));
+        }
+      })
+    }
     return <JSXZ in="orders" sel=".orders-container">
     <Z sel=".submit-button-3" onClick={(e) => handleClick(this.props)}></Z>
     <Z sel=".table-body">
@@ -305,7 +319,7 @@ var Orders = createReactClass({
       <Z sel=".col-5">{order["status.state"]}</Z>
       <Z sel=".col-6" onClick={(e) => Link.GoTo("order", order.remoteid, "")}><ChildrenZ /></Z>
       <Z sel=".col-7" onClick={(e) => delete_order(order.remoteid, this.props)}><ChildrenZ /></Z>
-      <Z sel=".col-8" onClick={(e) => pay_order()}><ChildrenZ /></Z>
+      <Z sel=".col-8" onClick={(e) => pay_order(order.remoteid, this.props)}><ChildrenZ /></Z>
       </JSXZ>))
     }
     </Z>

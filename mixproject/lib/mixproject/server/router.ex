@@ -78,6 +78,14 @@ defmodule Server.Router do
     send_resp(conn, 200, body)
   end
 
+  get "/api/order/process_payment/:id" do
+    {:ok, pid} = GenServer.start_link(Fsm.Server, id)
+    updated_order = GenServer.call(pid, :process_payment)
+    GenServer.stop(pid, :normal)
+    :timer.sleep(2000)
+    send_resp(conn, 200, Poison.encode!updated_order)
+  end
+
   # get _, do: send_file(conn, 200, "/home/coachbombay/formation/mixproject/priv/static/index.html")
   get _ do
   conn = fetch_query_params(conn)
