@@ -301,8 +301,14 @@ var Orders = createReactClass({
           console.log(value),
           console.log(data),
           props.loader(HTTP.get("/api/order/process_payment/" + id).then(res => {
-            delete browserState.orders
-            Link.onPathChange();
+            console.log(res)
+            if (res != "ERROR") {
+              delete browserState.orders
+              Link.onPathChange();
+            }
+            else {
+              alert("Order is already payed !")
+            }
           }));
         }
       })
@@ -427,7 +433,6 @@ var routes = {
   //
   // window.addEventListener("popstate", ()=>{ onPathChange() })
   // onPathChange()
-
   var browserState = {}
 
 

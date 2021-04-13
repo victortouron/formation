@@ -66,10 +66,26 @@
     map = Poison.decode!(keys)
     orders = Map.get(map, "keys")
     Enum.map(orders, fn order ->
+      payment_method = case :rand.uniform(3) do
+        1 -> "Paypal"
+        2 -> "Stripe"
+        3 -> "Delivery"
+      end
+      # update payment method
       command = Poison.decode!(get_object("vtouron_orders", order))
-      status = Map.get(command, "status")
+      updated_command = Map.put(command, "payment_method", payment_method)
+      # custom = Map.get(command, "custom")
+      # magento = Map.get(custom, "magento")
+      # payment = Map.get(magento, "payment")
+      # Paypal Stripe Delivery
+      # updated_method = Map.replace(payment, "method", payment_method)
+      # updated_payment = Map.replace(magento, "payment", updated_method)
+      # updated_magento = Map.replace(custom, "magento", updated_payment)
+      # updated_custom = Map.replace(command, "custom", updated_magento)
+      # update command status state = init
+      status = Map.get(updated_command, "status")
       new_map = Map.replace(status, "state", "init")
-      final_map = Map.replace(command, "status", new_map)
+      final_map = Map.replace(updated_command, "status", new_map)
       Riak.put_object(bucket, order, final_map)
     end)
   end

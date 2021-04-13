@@ -80,8 +80,11 @@ defmodule Server.Router do
 
   get "/api/order/process_payment/:id" do
     {:ok, pid} = GenServer.start_link(Fsm.Server, id)
-    updated_order = GenServer.call(pid, :process_payment)
+    updated_order = GenServer.call(pid, :payment_process)
     GenServer.stop(pid, :normal)
+    if updated_order == :error do
+      send_resp(conn, 200, Poison.encode!("ERROR"))
+    end
     :timer.sleep(2000)
     send_resp(conn, 200, Poison.encode!updated_order)
   end
