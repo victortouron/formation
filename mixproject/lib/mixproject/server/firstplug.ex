@@ -16,5 +16,4 @@ defmodule TheFirstPlug do
     # def call(%{:request_path => "/"} = conn, _opts) do
     #   send_resp(conn, 200, "Welcome to the new world of Plugs!")
     # end
-
 end

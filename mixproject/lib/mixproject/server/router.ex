@@ -3,9 +3,7 @@ defmodule Server.Router do
   require EEx
   EEx.function_from_file :defp, :layout, "web/layout.html.eex", [:render]
   # plug Plug.Static, from: "/home/coachbombay/formation/mixproject/priv/static", at: "/static"
-
   plug Plug.Static, at: "/public", from: :mixproject
-
 
   plug :match
   plug :dispatch

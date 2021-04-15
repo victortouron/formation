@@ -11170,7 +11170,7 @@ var Orders = createReactClass({
         title: 'Order deletion',
         message: 'Are you sure you want to delete this ?',
         callback: function callback(value) {
-          console.log(value), console.log(data), props.loader(HTTP.post("/api/delete", data).then(function (res) {
+          console.log(value), console.log(data), props.loader(HTTP.delete("/api/delete/" + id).then(function (res) {
             delete browserState.orders;
             Link.onPathChange();
           }));
@@ -11188,7 +11188,7 @@ var Orders = createReactClass({
         callback: function callback(value) {
           console.log(value), console.log(data), props.loader(HTTP.get("/api/order/process_payment/" + id).then(function (res) {
             console.log(res);
-            if (res != "ERROR") {
+            if (res != "error") {
               delete browserState.orders;
               Link.onPathChange();
             } else {

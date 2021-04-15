@@ -15,7 +15,7 @@ defmodule Mixproject.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger, :cowboy, :inets, :ssl, :reaxt],
+      extra_applications: [:logger, :ewebmachine, :cowboy, :inets, :ssl, :reaxt],
       mod: {Mixproject.Application, []}
     ]
   end
@@ -25,6 +25,7 @@ defmodule Mixproject.MixProject do
     [
       {:reaxt, "~> 2.1.0", github: "kbrw/reaxt", tag: "2.1.0"},
       {:poison, "~> 2.1.0"},
+      {:ewebmachine, "2.2.1"},
       {:plug_cowboy, "~> 1.0"},
       {:rulex, git: "https://github.com/kbrw/rulex.git"},
       {:exfsm, git: "https://github.com/kbrw/exfsm.git"}

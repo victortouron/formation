@@ -9,7 +9,6 @@ end
 
 defmodule MyFSM do
   # use ExFSM
-  #
   # deftrans init({:process_payment, []}, order) do
   #   {:next_state, :not_verified, order}
   # end
@@ -39,6 +38,7 @@ end
 
 defmodule MyRulex do
   use Rulex
+  # module acces pour pacrourir mon object avec clés
   defrule delivery_fsm(%{"payment_method"=> "Delivery"}, acc), do: {:ok, [MyFSM.Delivery | acc]}
   defrule paypal_fsm(%{"payment_method"=> "Paypal"}, acc), do: {:ok, [MyFSM.Paypal | acc]}
   defrule stripe_fsm(%{"payment_method"=> "Stripe"}, acc), do: {:ok, [MyFSM.Stripe | acc]}
