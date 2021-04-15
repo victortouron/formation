@@ -50,6 +50,18 @@ defmodule Server.EwebRouter do
 
   resource "/api/orders" do %{} after
     content_types_provided do: ['application/json': :to_json]
+    # allowed_methods do: ["GET"]
+    # resource_exists do
+    #   if conn.query_string == "" do
+    #     page = 1
+    #     {_res,{{_,_code, _message},_headers,body}} = Riak.search("vtouron_orders_index", "type:nat_order", page)
+    #     body
+    #   else
+    #     %{"page" => page} = Plug.Conn.Query.decode(conn.query_string)
+    #     {_res,{{_,_code, _message},_headers,body}} = Riak.search("vtouron_orders_index", "type:nat_order", String.to_integer(page))
+    #     body
+    #   end
+    # end
     allowed_methods do: ["GET"]
     defh to_json do
       if conn.query_string == "" do
@@ -65,6 +77,7 @@ defmodule Server.EwebRouter do
   end
   resource "/api/order/:id" do %{id: id} after
     content_types_provided do: ['application/json': :to_json]
+    allowed_methods do: ["GET"]
     defh to_json do
       {_res,{{_,_code, _message},_headers,body}} = Riak.search("vtouron_orders_index", "id:nat_order" <> state.id)
       body
